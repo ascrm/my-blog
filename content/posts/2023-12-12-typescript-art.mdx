@@ -1,0 +1,35 @@
+---
+title: "为什么说 TypeScript 的类型系统是一门艺术"
+date: "2023-12-12"
+description: "当类型不再仅仅是一种防御性编程工具，而是成为一种思维导图时，开发者的生产力将迎来质的飞跃。"
+tags: ["Code"]
+cover: "https://uni-storage-1253266055.cos.ap-guangzhou.myqcloud.com/review-of-2024.webp"
+---
+
+## 类型的本质
+
+类型系统不仅仅是为了避免错误，它更是一种表达业务逻辑的方式。
+
+## 高级类型技巧
+
+### 1. 条件类型
+
+```typescript
+type MessageOf<T> = T extends { message: unknown } ? T["message"] : never;
+```
+
+### 2. 映射类型
+
+```type Record<string, number> = {
+  [K in string]: number;
+}```
+
+### 3. 模板字面量类型
+
+```typescript
+type EventName = `on${Capitalize<string>}`;
+```
+
+## 类型驱动开发
+
+将类型作为设计的起点，让类型引导我们思考代码的结构。
