@@ -4,40 +4,45 @@ import React, { useState } from "react";
 import { Mail, Github, Linkedin, Twitter, Send, User, MessageSquare, ArrowUpRight, CheckCircle2 } from "lucide-react";
 import { useSite } from "@/components/common/SiteContext";
 import { cn } from "@/lib/utils";
+import { useTranslations, useLocale } from "next-intl";
 
 const contactMethods = [
   {
     icon: Mail,
-    label: { zh: "邮箱", en: "Email" },
+    labelKey: "email",
     value: "hello@name.dev",
     href: "mailto:hello@name.dev",
-    description: { zh: "我会尽快回复你", en: "I'll reply as soon as possible" },
+    descriptionKey: "emailDesc",
   },
   {
     icon: Github,
-    label: { zh: "GitHub", en: "GitHub" },
+    labelKey: "github",
     value: "@ascrm",
     href: "https://github.com/ascrm",
-    description: { zh: "查看我的开源项目", en: "Check out my open source projects" },
+    descriptionKey: "githubDesc",
   },
   {
     icon: Linkedin,
-    label: { zh: "LinkedIn", en: "LinkedIn" },
+    labelKey: "linkedin",
     value: "in/ascrm",
     href: "https://linkedin.com/in/ascrm",
-    description: { zh: "建立专业联系", en: "Let's connect professionally" },
+    descriptionKey: "linkedinDesc",
   },
   {
     icon: Twitter,
-    label: { zh: "Twitter", en: "Twitter" },
+    labelKey: "twitter",
     value: "@ascrm_dev",
     href: "https://twitter.com/ascrm_dev",
-    description: { zh: "日常分享与思考", en: "Daily thoughts and updates" },
+    descriptionKey: "twitterDesc",
   },
 ];
 
 export function ContactInfo() {
-  const { isDark, t } = useSite();
+  const { isDark } = useSite();
+  const locale = useLocale();
+  const t = useTranslations('contact');
+  const tMethods = useTranslations('contact.methods');
+
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
@@ -50,7 +55,6 @@ export function ContactInfo() {
   const iconBg = isDark ? "bg-white/5" : "bg-black/5";
   const inputBg = isDark ? "bg-zinc-900/50" : "bg-zinc-100/50";
   const btnBg = isDark ? "bg-white text-black" : "bg-black text-white";
-  const formBg = isDark ? "bg-zinc-950" : "bg-zinc-50";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,7 +71,7 @@ export function ContactInfo() {
       {/* 联系卡片 */}
       <div className="lg:col-span-7 space-y-6">
         <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] opacity-30 mb-8">
-          {t("联系方式", "Contact Methods")}
+          {t('contactMethods')}
         </h3>
         <div className="grid sm:grid-cols-2 gap-6">
           {contactMethods.map((method, idx) => (
@@ -89,10 +93,10 @@ export function ContactInfo() {
               )}>
                 <method.icon size={26} className="opacity-40 group-hover:opacity-100 group-hover:text-blue-500 transition-all" />
               </div>
-              <h4 className="text-xl font-bold mb-2">{t(method.label.zh, method.label.en)}</h4>
+              <h4 className="text-xl font-bold mb-2">{tMethods(`${method.labelKey}.label`)}</h4>
               <p className="text-sm font-mono opacity-60 mb-3 tracking-tight">{method.value}</p>
               <p className={cn("text-xs font-medium", textSecondary)}>
-                {t(method.description.zh, method.description.en)}
+                {tMethods(`${method.labelKey}.description`)}
               </p>
             </a>
           ))}
@@ -109,17 +113,14 @@ export function ContactInfo() {
               <Send size={20} className="text-blue-500" />
             </div>
             <span className="text-[10px] font-bold uppercase tracking-widest opacity-60">
-              {t("订阅周刊", "Newsletter")}
+              {t('newsletter')}
             </span>
           </div>
           <p className="text-2xl font-bold mb-4 tracking-tight">
-            {t("获取我的技术周刊", "Get my tech newsletter")}
+            {t('getNewsletter')}
           </p>
           <p className={cn("text-sm leading-relaxed mb-8 max-w-md", textSecondary)}>
-            {t(
-              "每周精选技术文章、设计灵感和生活思考，直接发送到你的邮箱。",
-              "Weekly curated tech articles, design inspiration, and life thoughts delivered to your inbox."
-            )}
+            {t('newsletterDescription')}
           </p>
           <div className={cn(
             "flex gap-4 border-b-2 pb-3 focus-within:border-blue-500 transition-all duration-300",
@@ -127,7 +128,7 @@ export function ContactInfo() {
           )}>
             <input
               type="email"
-              placeholder="Email Address"
+              placeholder={t('subscribePlaceholder')}
               className={cn(
                 "flex-grow bg-transparent text-sm focus:outline-none placeholder:opacity-30",
                 textSecondary
@@ -136,7 +137,7 @@ export function ContactInfo() {
             <button className={cn(
               "text-[10px] font-black uppercase tracking-widest hover:text-blue-500 transition-colors active:scale-90 cursor-pointer"
             )}>
-              {t("订阅", "Subscribe")}
+              {t('subscribe')}
             </button>
           </div>
         </div>
@@ -145,7 +146,7 @@ export function ContactInfo() {
       {/* 联系表单 */}
       <div className="lg:col-span-5">
         <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] opacity-30 mb-8">
-          {t("发送消息", "Send a Message")}
+          {t('sendMessage')}
         </h3>
         <div className={cn(
           "p-10 rounded-[2.5rem] border backdrop-blur-sm relative overflow-hidden",
@@ -161,13 +162,10 @@ export function ContactInfo() {
                 <CheckCircle2 size={40} className="text-emerald-500" />
               </div>
               <h4 className="text-3xl font-bold mb-4 tracking-tighter">
-                {t("消息已发送！", "Message Sent!")}
+                {t('messageSent')}
               </h4>
               <p className={cn("text-sm mb-10", textSecondary)}>
-                {t(
-                  "感谢你的留言，我会尽快回复你。",
-                  "Thanks for your message. I'll get back to you soon."
-                )}
+                {t('messageSentDescription')}
               </p>
               <button
                 onClick={() => setSent(false)}
@@ -178,7 +176,7 @@ export function ContactInfo() {
                     : "border-black/10 hover:bg-black hover:text-white"
                 )}
               >
-                {t("返回表单", "Return to Form")}
+                {t('returnForm')}
               </button>
             </div>
           ) : (
@@ -186,8 +184,8 @@ export function ContactInfo() {
               <div className="space-y-6">
                 {/* 名字和邮箱输入框 */}
                 {[
-                  { id: 'name', label: t("你的名字", "Your Name"), icon: User, placeholder: t("请输入你的名字", "Enter your name"), type: 'text' },
-                  { id: 'email', label: t("你的邮箱", "Your Email"), icon: Mail, placeholder: t("请输入你的邮箱", "Enter your email"), type: 'email' }
+                  { id: 'name', labelKey: 'name', placeholderKey: 'namePlaceholder', icon: User, type: 'text' as const },
+                  { id: 'email', labelKey: 'email', placeholderKey: 'emailPlaceholder', icon: Mail, type: 'email' as const }
                 ].map((field) => (
                   <div key={field.id} className="group space-y-3">
                     <label className={cn(
@@ -196,14 +194,14 @@ export function ContactInfo() {
                       "group-focus-within:translate-x-1"
                     )}>
                       <field.icon size={12} />
-                      {field.label}
+                      {t(field.labelKey as any)}
                     </label>
                     <input
                       required
                       type={field.type}
                       value={formData[field.id as keyof typeof formData]}
                       onChange={(e) => setFormData({ ...formData, [field.id]: e.target.value })}
-                      placeholder={field.placeholder}
+                      placeholder={t(field.placeholderKey as any)}
                       className={cn(
                         "w-full px-5 h-14 rounded-2xl text-sm border transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-500/10",
                         inputBg,
@@ -223,14 +221,14 @@ export function ContactInfo() {
                     "group-focus-within:translate-x-1"
                   )}>
                     <MessageSquare size={12} />
-                    {t("你的消息", "Your Message")}
+                    {t('messageLabel')}
                   </label>
                   <textarea
                     required
                     rows={5}
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    placeholder={t("请输入你想说的话", "Enter your message")}
+                    placeholder={t('messagePlaceholder')}
                     className={cn(
                       "w-full px-5 py-4 rounded-2xl text-sm border transition-all duration-300 resize-none focus:outline-none focus:ring-4 focus:ring-blue-500/10",
                       inputBg,
@@ -261,12 +259,12 @@ export function ContactInfo() {
                       <div className={cn("absolute inset-0 border-2 border-current/20 rounded-full", isDark ? "border-white/20" : "border-black/20")} />
                       <div className="absolute inset-0 border-2 border-current border-t-transparent rounded-full animate-spin-smooth" />
                     </div>
-                    <span className="animate-pulse">{t("正在发送", "Sending...")}</span>
+                    <span className="animate-pulse">{t('sending')}</span>
                   </div>
                 ) : (
                   <>
                     <span className="group-hover:translate-x-[-4px] transition-transform duration-300">
-                      {t("发送消息", "Send Message")}
+                      {t('sendButton')}
                     </span>
                     <ArrowUpRight size={18} className="group-hover:translate-x-1 group-hover:translate-y-[-4px] transition-transform duration-300" />
                   </>

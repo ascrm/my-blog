@@ -4,13 +4,14 @@ import React from "react";
 import { useSite } from "@/components/common/SiteContext";
 import { cn } from "@/lib/utils";
 import { MessageSquare, Terminal, Palette, PenTool, Eye, Sprout } from "lucide-react";
+import { useTranslations, useLocale } from "next-intl";
 
 interface Archive {
   date: string;
   title: { zh: string; en: string };
   excerpt: { zh: string; en: string };
   category: string;
-  status: string;
+  status: "Evergreen" | "Sprouting" | "Evolving" | "Fading";
   views: string;
 }
 
@@ -27,17 +28,6 @@ const getCategoryIcon = (category: string) => {
     default:
       return <MessageSquare size={14} />;
   }
-};
-
-// 根据状态获取配置
-const getStatusConfig = (status: string, isDark: boolean) => {
-  const configs: Record<string, { color: string; label: { zh: string; en: string } }> = {
-    "Evergreen": { color: "bg-green-500", label: { zh: "常青", en: "Evergreen" } },
-    "Sprouting": { color: "bg-emerald-300", label: { zh: "萌芽", en: "Sprouting" } },
-    "Evolving": { color: "bg-amber-500", label: { zh: "演进", en: "Evolving" } },
-    "Fading": { color: "bg-gray-500", label: { zh: "存档", en: "Archive" } },
-  };
-  return configs[status] || configs["Evergreen"];
 };
 
 const archives: Archive[] = [
@@ -109,8 +99,22 @@ const archives: Archive[] = [
   },
 ];
 
+// 根据状态获取颜色
+const getStatusColor = (status: string) => {
+  switch (status) {
+    case "Evergreen": return "bg-green-500";
+    case "Sprouting": return "bg-emerald-300";
+    case "Evolving": return "bg-amber-500";
+    case "Fading": return "bg-gray-500";
+    default: return "bg-green-500";
+  }
+};
+
 export function ArchiveFeed() {
-  const { isDark, t, lang } = useSite();
+  const { isDark } = useSite();
+  const locale = useLocale();
+  const t = useTranslations('archiveFeed');
+  const tStatus = useTranslations('archiveFeed.status');
 
   const bgCard = isDark ? "bg-white/5 border-white/5 hover:border-white/20" : "bg-black/5 border-black/5 hover:border-black/20";
   const bgSpecial = isDark ? "bg-white/[0.02]" : "bg-black/[0.02]";
@@ -118,10 +122,26 @@ export function ArchiveFeed() {
   const textPrimary = isDark ? "text-[#f0f0f0]" : "text-[#1a1a1a]";
   const textSecondary = isDark ? "text-gray-500" : "text-gray-400";
 
+  // 获取翻译文本的辅助函数
+  const getLocalizedText = (zh: string, en: string) => {
+    return locale === 'zh' ? zh : en;
+  };
+
+  // 获取状态翻译
+  const getStatusLabel = (status: string) => {
+    switch (status) {
+      case "Evergreen": return tStatus('evergreen');
+      case "Sprouting": return tStatus('sprouting');
+      case "Evolving": return tStatus('evolving');
+      case "Fading": return tStatus('fading');
+      default: return status;
+    }
+  };
+
   return (
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 pb-32">
       {archives.map((article, i) => {
-        const statusInfo = getStatusConfig(article.status, isDark);
+        const statusColor = getStatusColor(article.status);
         return (
           <div
             key={i}
@@ -149,11 +169,11 @@ export function ArchiveFeed() {
             </span>
 
             <h3 className="text-2xl font-bold mb-6 leading-tight group-hover:text-current transition-colors">
-              {t(article.title.zh, article.title.en)}
+              {getLocalizedText(article.title.zh, article.title.en)}
             </h3>
 
             <p className="text-sm leading-relaxed mb-8 opacity-60 line-clamp-3">
-              {t(article.excerpt.zh, article.excerpt.en)}
+              {getLocalizedText(article.excerpt.zh, article.excerpt.en)}
             </p>
 
             {/* 占位元素，将底部对齐 */}
@@ -166,18 +186,18 @@ export function ArchiveFeed() {
                   <span
                     className={cn(
                       "w-1.5 h-1.5 rounded-full",
-                      statusInfo.color,
+                      statusColor,
                       article.status === "Evolving" && "animate-pulse"
                     )}
                   ></span>
-                  {t(statusInfo.label.zh, statusInfo.label.en)}
+                  {getStatusLabel(article.status)}
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Eye size={12} /> {article.views}
                 </div>
               </div>
               <button className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 group-hover:gap-2 transition-all cursor-pointer">
-                {t("阅读全文", "Read Full Post")} <Sprout size={12} />
+                {t('readFullPost')} <Sprout size={12} />
               </button>
             </div>
           </div>
@@ -196,22 +216,22 @@ export function ArchiveFeed() {
           <Sprout size={20} className="opacity-50" />
         </div>
         <h4 className={cn("text-xl font-bold mb-4 italic", textPrimary)}>
-          {t("渴望更多？", "Want more?")}
+          {t('wantMore')}
         </h4>
         <p className="text-sm opacity-50 mb-8 max-w-[200px]">
-          {t("订阅我的周刊，每周获取最新的技术趋势与设计灵感。", "Subscribe to my newsletter for weekly tech trends and design inspiration.")}
+          {t('subscribeDescription')}
         </p>
         <div className="flex w-full gap-2 border-b border-current/20 pb-2">
           <input
             type="text"
-            placeholder="Email"
+            placeholder={t('emailPlaceholder')}
             className={cn(
               "flex-grow bg-transparent text-xs py-2 focus:outline-none",
               textSecondary
             )}
           />
           <button className="text-xs font-bold uppercase tracking-tighter hover:opacity-60 transition-opacity cursor-pointer">
-            Join
+            {t('join')}
           </button>
         </div>
       </div>

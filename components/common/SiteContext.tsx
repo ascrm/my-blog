@@ -2,13 +2,8 @@
 
 import { createContext, useContext } from "react";
 
-export type Language = "zh" | "en";
-
 interface SiteContextType {
-  lang: Language;
   isDark: boolean;
-  t: (zh: string, en: string) => string;
-  toggleLang: () => void;
   toggleTheme: () => void;
 }
 

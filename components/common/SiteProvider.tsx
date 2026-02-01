@@ -11,48 +11,32 @@ interface SiteProviderProps {
   children: ReactNode;
 }
 
+// 获取初始主题状态
+function getInitialTheme(): boolean {
+  if (typeof window === 'undefined') return true;
+  const savedTheme = localStorage.getItem("theme");
+  return savedTheme === "dark" || 
+    (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches);
+}
+
 // 内部组件 - 包含所有状态和逻辑
 function SiteProviderContent({ children }: SiteProviderProps) {
-  const [isDark, setIsDark] = useState(true);
-  const [lang, setLang] = useState<"zh" | "en">("zh");
+  const [isDark, setIsDark] = useState(getInitialTheme);
   const [scrolled, setScrolled] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
-  // 初始化主题和语言
+  // 同步主题状态到 DOM
   useEffect(() => {
-    // 初始化主题
-    const savedTheme = localStorage.getItem("theme");
-    const prefersDark = savedTheme
-      ? savedTheme === "dark"
-      : window.matchMedia("(prefers-color-scheme: dark)").matches;
-    setIsDark(prefersDark);
-    document.documentElement.classList.toggle("dark", prefersDark);
-
-    // 初始化语言
-    const savedLang = localStorage.getItem("lang");
-    if (savedLang === "zh" || savedLang === "en") {
-      setLang(savedLang);
-    }
-  }, []);
+    document.documentElement.classList.toggle("dark", isDark);
+  }, [isDark]);
 
   // 切换主题
   const toggleTheme = () => {
     const newIsDark = !isDark;
     setIsDark(newIsDark);
     localStorage.setItem("theme", newIsDark ? "dark" : "light");
-    document.documentElement.classList.toggle("dark", newIsDark);
   };
-
-  // 切换语言
-  const toggleLang = () => {
-    const newLang = lang === "zh" ? "en" : "zh";
-    setLang(newLang);
-    localStorage.setItem("lang", newLang);
-  };
-
-  // 翻译函数
-  const t = (zh: string, en: string) => (lang === "zh" ? zh : en);
 
   // 滚动和鼠标事件
   useEffect(() => {
@@ -78,7 +62,7 @@ function SiteProviderContent({ children }: SiteProviderProps) {
   const textColor = isDark ? "#f0f0f0" : "#1a1a1a";
 
   return (
-    <SiteContext.Provider value={{ lang, isDark, t, toggleLang, toggleTheme }}>
+    <SiteContext.Provider value={{ isDark, toggleTheme }}>
       <div
         className="min-h-screen transition-colors duration-500 font-sans"
         style={{ backgroundColor: bgColor, color: textColor }}

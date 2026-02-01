@@ -1,0 +1,140 @@
+{
+  "nav": {
+    "home": "Home",
+    "work": "Work",
+    "archive": "Archive",
+    "contact": "Contact",
+    "resume": "Resume"
+  },
+  "hero": {
+    "greeting": "Hello, I'm",
+    "name": "Zhang Hengyuan (ascrm)",
+    "niceToMeetYou": "Nice to meet you",
+    "bio": "As an independent developer and full-stack engineer, I'm passionate about building digital products that truly solve problems. I pursue extreme code aesthetics and seek the most elegant solutions in complex tech stacks.",
+    "getResume": "Get Resume",
+    "building": "Building something new...",
+    "quote": "Stay hungry, stay extreme. Connecting the last 1 pixel between design and code."
+  },
+  "home": {
+    "helloFriend": "Hello, Friend.",
+    "enterSpace": "Enter Space"
+  },
+  "contact": {
+    "greeting": "Let's Connect",
+    "title": "Get in Touch",
+    "description": "Whether you want to discuss technology, talk about design, or just say hi, I'd love to hear from you.",
+    "contactMethods": "Contact Methods",
+    "sendMessage": "Send a Message",
+    "newsletter": "Newsletter",
+    "getNewsletter": "Get my tech newsletter",
+    "newsletterDescription": "Weekly curated tech articles, design inspiration, and life thoughts delivered to your inbox.",
+    "subscribe": "Subscribe",
+    "subscribePlaceholder": "Email Address",
+    "messageSent": "Message Sent!",
+    "messageSentDescription": "Thanks for your message. I'll get back to you soon.",
+    "returnForm": "Return to Form",
+    "name": "Your Name",
+    "namePlaceholder": "Enter your name",
+    "email": "Your Email",
+    "emailPlaceholder": "Enter your email",
+    "messageLabel": "Your Message",
+    "messagePlaceholder": "Enter your message",
+    "sending": "Sending...",
+    "sendButton": "Send Message",
+    "methods": {
+      "email": {
+        "label": "Email",
+        "description": "I'll reply as soon as possible"
+      },
+      "github": {
+        "label": "GitHub",
+        "description": "Check out my open source projects"
+      },
+      "linkedin": {
+        "label": "LinkedIn",
+        "description": "Let's connect professionally"
+      },
+      "twitter": {
+        "label": "Twitter",
+        "description": "Daily thoughts and updates"
+      }
+    }
+  },
+  "archive": {
+    "title": "Archive",
+    "digitalGarden": "Digital Garden / Journal",
+    "description": "Fragmented observations on technology, design, and the world. This is my digital garden for reflection.",
+    "allPosts": "All Posts",
+    "search": "Search posts...",
+    "noPosts": "No posts yet"
+  },
+  "work": {
+    "role": "Full-stack Engineer / Designer",
+    "title": "Projects Archive",
+    "description": "A curated collection of my work in full-stack development, architecture, and UI design. Each piece represents my pursuit of engineering excellence.",
+    "workTitle": "Work",
+    "featured": "Featured Projects",
+    "allProjects": "All Projects"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "switchTheme": "Switch Theme"
+  },
+  "locale": {
+    "switch": "中/EN"
+  },
+  "common": {
+    "loading": "Loading..."
+  },
+  "footer": {
+    "description": "Committed to exploring the boundaries of technology and art. Every pixel, every line of code, is a promise of extreme experience.",
+    "quickLinks": "Quick Links",
+    "status": "Status",
+    "availability": "Current Availability",
+    "acceptingProjects": "Accepting Projects",
+    "lastUpdated": "Last Updated",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "copyright": "All rights reserved."
+  },
+  "techStack": {
+    "title": "Technology Stack / 技术栈"
+  },
+  "archiveFeed": {
+    "readFullPost": "Read Full Post",
+    "wantMore": "Want more?",
+    "subscribeDescription": "Subscribe to my newsletter for weekly tech trends and design inspiration.",
+    "join": "Join",
+    "emailPlaceholder": "Email",
+    "status": {
+      "evergreen": "Evergreen",
+      "sprouting": "Sprouting",
+      "evolving": "Evolving",
+      "fading": "Archive"
+    }
+  },
+  "entry": {
+    "helloFriend": "Hello, Friend.",
+    "iAmAscrm": "I'm ascrm.",
+    "enterSpace": "Enter Space / 点击进入",
+    "phrases": [
+      "于寂静处听惊雷 / Listening to the thunder in silence.",
+      "代码、设计与生活的平衡 / Balance of code, design and life.",
+      "正在记录成长的瞬间 / Capturing moments of growth.",
+      "大道至简，衍化至繁 / Simplicity is complexity resolved."
+    ]
+  },
+  "offsetSections": {
+    "featuredWorks": "Featured Works",
+    "featuredWorksDesc": "A collection of my most representative work across various fields.",
+    "viewAllWorks": "View All Works",
+    "digitalArchive": "Digital Archive",
+    "digitalArchiveDesc": "Experimental demos, open-source plugins, and thoughts on technology evolution.",
+    "enterArchive": "Enter Archive"
+  },
+  "projectList": {
+    "visitProject": "Visit Project",
+    "techSpecs": "Tech Specs"
+  }
+}

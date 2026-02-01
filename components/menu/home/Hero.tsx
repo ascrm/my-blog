@@ -4,9 +4,11 @@ import React from "react";
 import { Github, Linkedin, Mail, ExternalLink, MapPin, Radio, Quote } from "lucide-react";
 import { useSite } from "@/components/common/SiteContext";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 export function Hero() {
-  const { isDark, t } = useSite();
+  const { isDark } = useSite();
+  const t = useTranslations('hero');
 
   const textPrimary = isDark ? "text-white" : "text-black";
   const textSecondary = isDark ? "text-gray-400" : "text-gray-600";
@@ -23,25 +25,22 @@ export function Hero() {
         <div className="col-span-12 lg:col-span-7 relative z-10">
           <h1 className="flex flex-col gap-1 mb-10">
             <span className="text-5xl md:text-7xl font-black tracking-tighter leading-none">
-              {t("你好，我是", "Hello, I'm")}
+              {t('greeting')}
             </span>
             <span className={cn(
               "text-5xl md:text-7xl font-black tracking-tighter leading-none italic",
               isDark ? "text-transparent stroke-text-white" : "text-transparent stroke-text-black"
             )}
             style={{ WebkitTextStroke: isDark ? '1px rgba(255,255,255,0.3)' : '1px rgba(0,0,0,0.3)' }}>
-              {t("张恒源 (ascrm)", "Zhang Hengyuan (ascrm)")}
+              {t('name')}
             </span>
             <span className="text-5xl md:text-7xl font-black tracking-tighter leading-none">
-              {t("很高兴遇见你", "Nice to meet you")}
+              {t('niceToMeetYou')}
             </span>
           </h1>
 
           <p className="text-base md:text-lg max-w-xl leading-relaxed mb-12 font-light opacity-70">
-            {t(
-              "作为一名独立开发者与全栈工程师，我热衷于构建能够真正解决问题的数字化产品。我追求极致的代码美学，并在复杂的技术栈中寻找最优雅的解决方案。",
-              "As an independent developer and full-stack engineer, I'm passionate about building digital products that truly solve problems. I pursue extreme code aesthetics and seek the most elegant solutions in complex tech stacks."
-            )}
+            {t('bio')}
           </p>
 
           <div className="flex flex-wrap items-center gap-6">
@@ -49,7 +48,7 @@ export function Hero() {
               "group flex items-center gap-3 px-6 py-3 rounded-full text-base font-bold transition-all cursor-pointer",
               btnBg
             )}>
-              {t("获取简历", "Get Resume")} <ExternalLink size={16} />
+              {t('getResume')} <ExternalLink size={16} />
             </button>
             <div className="flex gap-5">
               <a href="https://github.com" target="_blank" rel="noopener noreferrer" className={cn("hover:opacity-100 transition-opacity", iconOpacity)}>
@@ -93,12 +92,12 @@ export function Hero() {
               </div>
               <div className="flex items-center gap-3 text-sm font-mono">
                 <Radio size={14} className="text-emerald-500 animate-pulse" />
-                <span>{t("正在构建新产品...", "Building something new...")}</span>
+                <span>{t('building')}</span>
               </div>
               <div className={cn("pt-4 border-t flex items-start gap-2", borderColor)}>
                 <Quote size={12} className={cn("mt-1", iconOpacity)} />
                 <p className="text-sm leading-relaxed opacity-60 max-w-[220px] md:max-w-[260px]">
-                  {t("保持空杯，追求极致。连接设计与代码的最后 1 像素。", "Stay hungry, stay极致. Connecting the last 1 pixel between design and code.")}
+                  {t('quote')}
                 </p>
               </div>
             </div>

@@ -3,6 +3,7 @@
 import React from "react";
 import { useSite } from "@/components/common/SiteContext";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 const skills = [
   { name: "Next.js", icon: "https://cdn.simpleicons.org/nextdotjs/white" },
@@ -20,7 +21,8 @@ const skills = [
 ];
 
 export function TechStack() {
-  const { isDark, t } = useSite();
+  const { isDark } = useSite();
+  const t = useTranslations('techStack');
 
   const borderColor = isDark ? "border-white/5" : "border-black/5";
   const bgSubtle = isDark ? "bg-white/[0.02]" : "bg-black/[0.02]";
@@ -32,7 +34,7 @@ export function TechStack() {
   return (
     <section className="py-32">
       <h2 className="text-xs font-bold tracking-[0.5em] uppercase opacity-20 mb-12 italic">
-        {t("技术栈 / Technology Stack", "Technology Stack / 技术栈")}
+        {t('title')}
       </h2>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
         {skills.map((skill, idx) => (

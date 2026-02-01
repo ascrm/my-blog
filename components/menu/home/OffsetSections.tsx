@@ -5,6 +5,8 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { useSite } from "@/components/common/SiteContext";
 import { cn } from "@/lib/utils";
+import { useTranslations, useLocale } from "next-intl";
+import { useParams } from "next/navigation";
 
 const workImages = [
   "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
@@ -19,12 +21,18 @@ const archiveImages = [
 ];
 
 export function OffsetSections() {
-  const { isDark, t } = useSite();
+  const { isDark } = useSite();
+  const params = useParams();
+  const locale = params.locale as string || 'zh';
+  const t = useTranslations('offsetSections');
 
   const borderColor = isDark ? "border-white/10" : "border-black/10";
   const textSecondary = isDark ? "text-gray-400" : "text-gray-600";
   const textMuted = isDark ? "text-gray-500" : "text-gray-400";
   const hoverText = isDark ? "group-hover:text-blue-500" : "group-hover:text-blue-600";
+
+  // 辅助函数获取本地化文本
+  const getLocalizedText = (zh: string, en: string) => locale === 'zh' ? zh : en;
 
   return (
     <section className="py-40 space-y-80">
@@ -35,21 +43,18 @@ export function OffsetSections() {
             Portfolio 01
           </span>
           <h2 className="text-5xl font-black mb-8 italic leading-tight">
-            {t("精选作品集", "Featured Works")}
+            {t('featuredWorks')}
           </h2>
           <p className="text-lg leading-relaxed mb-10 font-light opacity-60">
-            {t(
-              "这里收录了我近年来在各个领域最具代表性的实践成果。",
-              "A collection of my most representative work across various fields."
-            )}
+            {t('featuredWorksDesc')}
           </p>
           <Link
-            href="/work"
+            href={`/${locale}/work`}
             className={cn(
               "group flex items-center gap-4 text-xs font-bold uppercase tracking-[0.3em] transition-all hover:gap-6 cursor-pointer"
             )}
           >
-            {t("查看完整作品页", "View All Works")} <ArrowUpRight className={hoverText} />
+            {t('viewAllWorks')} <ArrowUpRight className={hoverText} />
           </Link>
         </div>
 
@@ -105,21 +110,18 @@ export function OffsetSections() {
             Archive 02
           </span>
           <h2 className="text-5xl font-black mb-8 italic leading-tight">
-            {t("数字档案室", "Digital Archive")}
+            {t('digitalArchive')}
           </h2>
           <p className="text-lg leading-relaxed mb-10 font-light opacity-60">
-            {t(
-              "这里存放着我的实验性 Demo、开源插件以及关于技术演进的思考碎片。",
-              "Experimental demos, open-source plugins, and thoughts on technology evolution."
-            )}
+            {t('digitalArchiveDesc')}
           </p>
           <Link
-            href="/archive"
+            href={`/${locale}/archive`}
             className={cn(
               "group flex items-center gap-4 text-xs font-bold uppercase tracking-[0.3em] transition-all hover:gap-6 cursor-pointer"
             )}
           >
-            {t("进入深度归档", "Enter Archive")} <ArrowUpRight className="group-hover:text-emerald-500" />
+            {t('enterArchive')} <ArrowUpRight className="group-hover:text-emerald-500" />
           </Link>
         </div>
       </div>

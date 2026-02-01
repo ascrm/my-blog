@@ -1,0 +1,140 @@
+{
+  "nav": {
+    "home": "首页",
+    "work": "作品",
+    "archive": "归档",
+    "contact": "联系",
+    "resume": "简历"
+  },
+  "hero": {
+    "greeting": "你好，我是",
+    "name": "张恒源 (ascrm)",
+    "niceToMeetYou": "很高兴遇见你",
+    "bio": "作为一名独立开发者与全栈工程师，我热衷于构建能够真正解决问题的数字化产品。我追求极致的代码美学，并在复杂的技术栈中寻找最优雅的解决方案。",
+    "getResume": "获取简历",
+    "building": "正在构建新产品...",
+    "quote": "保持空杯，追求极致。连接设计与代码的最后 1 像素。"
+  },
+  "home": {
+    "helloFriend": "Hello, Friend.",
+    "enterSpace": "Enter Space / 点击进入"
+  },
+  "contact": {
+    "greeting": "期待你的联系",
+    "title": "联系方式",
+    "description": "无论你是想探讨技术、讨论设计，还是仅仅想打个招呼，我都很高兴收到你的消息。",
+    "contactMethods": "联系方式",
+    "sendMessage": "发送消息",
+    "newsletter": "订阅周刊",
+    "getNewsletter": "获取我的技术周刊",
+    "newsletterDescription": "每周精选技术文章、设计灵感和生活思考，直接发送到你的邮箱。",
+    "subscribe": "订阅",
+    "subscribePlaceholder": "Email Address",
+    "messageSent": "消息已发送！",
+    "messageSentDescription": "感谢你的留言，我会尽快回复你。",
+    "returnForm": "返回表单",
+    "name": "你的名字",
+    "namePlaceholder": "请输入你的名字",
+    "email": "你的邮箱",
+    "emailPlaceholder": "请输入你的邮箱",
+    "messageLabel": "你的消息",
+    "messagePlaceholder": "请输入你想说的话",
+    "sending": "正在发送...",
+    "sendButton": "发送消息",
+    "methods": {
+      "email": {
+        "label": "邮箱",
+        "description": "我会尽快回复你"
+      },
+      "github": {
+        "label": "GitHub",
+        "description": "查看我的开源项目"
+      },
+      "linkedin": {
+        "label": "LinkedIn",
+        "description": "建立专业联系"
+      },
+      "twitter": {
+        "label": "Twitter",
+        "description": "日常分享与思考"
+      }
+    }
+  },
+  "archive": {
+    "title": "归档",
+    "digitalGarden": "数字花园 / 随笔",
+    "description": "关于技术、设计以及对这个世界的零碎观察。这里是我沉淀思考的数字花园。",
+    "allPosts": "所有文章",
+    "search": "搜索文章...",
+    "noPosts": "暂无文章"
+  },
+  "work": {
+    "role": "全栈工程师 / 设计师",
+    "title": "作品档案",
+    "description": "这里记录了我近年来在全栈开发、系统架构以及 UI 设计方面的深度实践。每一项都代表了我对工程质量的追求。",
+    "workTitle": "作品",
+    "featured": "精选项目",
+    "allProjects": "所有项目"
+  },
+  "theme": {
+    "light": "浅色",
+    "dark": "深色",
+    "switchTheme": "切换主题"
+  },
+  "locale": {
+    "switch": "中/EN"
+  },
+  "common": {
+    "loading": "加载中..."
+  },
+  "footer": {
+    "description": "致力于探索技术与艺术的边界。每一个像素，每一行代码，都是对极致体验的承诺。",
+    "quickLinks": "快速导航",
+    "status": "状态",
+    "availability": "当前状态",
+    "acceptingProjects": "可接项目",
+    "lastUpdated": "最后更新",
+    "privacy": "隐私政策",
+    "terms": "服务条款",
+    "copyright": "版权所有。"
+  },
+  "techStack": {
+    "title": "技术栈 / Technology Stack"
+  },
+  "archiveFeed": {
+    "readFullPost": "阅读全文",
+    "wantMore": "渴望更多？",
+    "subscribeDescription": "订阅我的周刊，每周获取最新的技术趋势与设计灵感。",
+    "join": "Join",
+    "emailPlaceholder": "Email",
+    "status": {
+      "evergreen": "常青",
+      "sprouting": "萌芽",
+      "evolving": "演进",
+      "fading": "存档"
+    }
+  },
+  "entry": {
+    "helloFriend": "Hello, Friend.",
+    "iAmAscrm": "I'm ascrm.",
+    "enterSpace": "Enter Space / 点击进入",
+    "phrases": [
+      "于寂静处听惊雷 / Listening to the thunder in silence.",
+      "代码、设计与生活的平衡 / Balance of code, design and life.",
+      "正在记录成长的瞬间 / Capturing moments of growth.",
+      "大道至简，衍化至繁 / Simplicity is complexity resolved."
+    ]
+  },
+  "offsetSections": {
+    "featuredWorks": "精选作品集",
+    "featuredWorksDesc": "这里收录了我近年来在各个领域最具代表性的实践成果。",
+    "viewAllWorks": "查看完整作品页",
+    "digitalArchive": "数字档案室",
+    "digitalArchiveDesc": "这里存放着我的实验性 Demo、开源插件以及关于技术演进的思考碎片。",
+    "enterArchive": "进入深度归档"
+  },
+  "projectList": {
+    "visitProject": "访问项目",
+    "techSpecs": "技术细节"
+  }
+}

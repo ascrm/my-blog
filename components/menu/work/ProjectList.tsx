@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowUpRight, ExternalLink } from "lucide-react";
 import { useSite } from "@/components/common/SiteContext";
 import { cn } from "@/lib/utils";
+import { useLocale, useTranslations } from "next-intl";
 
 interface Project {
   id: string;
@@ -65,7 +66,9 @@ const projects: Project[] = [
 ];
 
 export function ProjectList() {
-  const { isDark, t } = useSite();
+  const { isDark } = useSite();
+  const locale = useLocale();
+  const t = useTranslations('projectList');
 
   const textSecondary = isDark ? "text-gray-400" : "text-gray-500";
   const textMuted = isDark ? "text-gray-500" : "text-gray-400";
@@ -74,6 +77,9 @@ export function ProjectList() {
   const bgCard = isDark ? "bg-white/5 border-white/5" : "bg-black/5 border-black/5";
   const bgBadge = isDark ? "bg-white/5 border-white/10" : "bg-black/5 border-black/10";
   const textPrimary = isDark ? "text-[#f0f0f0]" : "text-[#1a1a1a]";
+
+  // 辅助函数获取本地化文本
+  const getLocalizedText = (zh: string, en: string) => locale === 'zh' ? zh : en;
 
   return (
     <div className="space-y-64 pb-32">
@@ -123,12 +129,12 @@ export function ProjectList() {
                     textMutedLight
                   )}
                 >
-                  {t(p.category.zh, p.category.en)}
+                  {getLocalizedText(p.category.zh, p.category.en)}
                 </span>
                 <div className={cn("h-[1px] w-8", isDark ? "bg-white/20" : "bg-black/20")}></div>
               </div>
               <h3 className={cn("text-4xl md:text-5xl font-bold mb-8", textPrimary)}>
-                {t(p.title.zh, p.title.en)}
+                {getLocalizedText(p.title.zh, p.title.en)}
               </h3>
               <div className="flex flex-wrap gap-2 mb-8">
                 {p.tags.map((tag) => (
@@ -149,21 +155,21 @@ export function ProjectList() {
                   isDark ? "bg-white text-black hover:bg-gray-200" : "bg-black text-white hover:bg-gray-800"
                 )}
               >
-                {t("访问项目", "Visit Project")} <ExternalLink size={14} />
+                {t('visitProject')} <ExternalLink size={14} />
               </button>
             </div>
 
             <div className="lg:col-span-7 flex flex-col justify-end">
               <div className={cn("mb-8 pb-8 border-b", borderColor)}>
                 <h4 className="text-xs font-bold uppercase tracking-widest mb-4 opacity-50">
-                  {t("技术细节", "Tech Specs")}
+                  {t('techSpecs')}
                 </h4>
                 <p className={cn("text-xl md:text-2xl leading-relaxed font-medium mb-6", textPrimary)}>
-                  {t(p.desc.zh, p.desc.en)}
+                  {getLocalizedText(p.desc.zh, p.desc.en)}
                 </p>
               </div>
               <p className={cn("text-lg leading-relaxed", textSecondary)}>
-                {t(p.details.zh, p.details.en)}
+                {getLocalizedText(p.details.zh, p.details.en)}
               </p>
             </div>
           </div>
