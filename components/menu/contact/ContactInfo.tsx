@@ -5,13 +5,16 @@ import { Mail, Github, Linkedin, Twitter, Send, User, MessageSquare, ArrowUpRigh
 import { useSite } from "@/components/common/SiteContext";
 import { cn } from "@/lib/utils";
 import { useTranslations, useLocale } from "next-intl";
+import emailjs from '@emailjs/browser';
+
+const MY_EMAIL = "casrillosylvi@gmail.com";
 
 const contactMethods = [
   {
     icon: Mail,
     labelKey: "email",
-    value: "hello@name.dev",
-    href: "mailto:hello@name.dev",
+    value: MY_EMAIL,
+    href: `mailto:${MY_EMAIL}`,
     descriptionKey: "emailDesc",
   },
   {
@@ -59,11 +62,34 @@ export function ContactInfo() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSending(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    setSending(false);
-    setSent(true);
-    setFormData({ name: "", email: "", message: "" });
-    setTimeout(() => setSent(false), 3000);
+
+    try {
+      console.log("环境变量：", process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID, process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID, process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY);
+      // 使用 EmailJS 发送邮件
+      await emailjs.send(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'service_default',
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || 'template_default',
+        {
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+          date: new Date().toLocaleString(),
+        },
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || 'public_key'
+      );
+
+      setSent(true);
+      setFormData({ name: "", email: "", message: "" });
+      setTimeout(() => setSent(false), 3000);
+    } catch (error) {
+      console.error('发送失败:', error);
+      // 如果 EmailJS 配置有问题，回退到 mailto
+      window.location.href = `mailto:${MY_EMAIL}?subject=来自网站的留言&body=${encodeURIComponent(
+        `姓名: ${formData.name}\n邮箱: ${formData.email}\n\n消息:\n${formData.message}`
+      )}`;
+    } finally {
+      setSending(false);
+    }
   };
 
   return (

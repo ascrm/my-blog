@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { Github, Linkedin, Mail, ExternalLink, MapPin, Radio, Quote } from "lucide-react";
+import { Github, Twitter, Mail, ExternalLink, MapPin, Radio, Quote } from "lucide-react";
+import Image from "next/image";
 import { useSite } from "@/components/common/SiteContext";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
@@ -45,7 +46,7 @@ export function Hero() {
 
           <div className="flex flex-wrap items-center gap-6">
             <button className={cn(
-              "group flex items-center gap-3 px-6 py-3 rounded-full text-base font-bold transition-all cursor-pointer",
+              "group flex items-center gap-3 px-8 py-3 rounded-full text-base font-bold transition-all cursor-pointer",
               btnBg
             )}>
               {t('getResume')} <ExternalLink size={16} />
@@ -54,8 +55,8 @@ export function Hero() {
               <a href="https://github.com" target="_blank" rel="noopener noreferrer" className={cn("hover:opacity-100 transition-opacity", iconOpacity)}>
                 <Github size={20} />
               </a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className={cn("hover:opacity-100 transition-opacity", iconOpacity)}>
-                <Linkedin size={20} />
+              <a href="https://x.com" target="_blank" rel="noopener noreferrer" className={cn("hover:opacity-100 transition-opacity", iconOpacity)}>
+                <Twitter size={20} />
               </a>
               <a href="mailto:hello@name.dev" className={cn("hover:opacity-100 transition-opacity", iconOpacity)}>
                 <Mail size={20} />
@@ -77,10 +78,16 @@ export function Hero() {
                 borderColor
               )}>
                 <div className={cn(
-                  "w-full h-full rounded-full flex items-center justify-center overflow-hidden",
+                  "w-full h-full rounded-full flex items-center justify-center overflow-hidden relative",
                   bgSubtle
                 )}>
-                  <Radio size={80} strokeWidth={1} className={iconOpacity} />
+                  <Image
+                    src="/images/avatar3.png"
+                    alt="Avatar"
+                    fill
+                    className="object-cover"
+                    priority
+                  />
                 </div>
               </div>
             </div>

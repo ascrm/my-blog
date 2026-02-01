@@ -11,12 +11,12 @@ const skills = [
   { name: "TypeScript", icon: "https://cdn.simpleicons.org/typescript/3178C6" },
   { name: "Tailwind", icon: "https://cdn.simpleicons.org/tailwindcss/06B6D4" },
   { name: "Node.js", icon: "https://cdn.simpleicons.org/nodedotjs/339933" },
-  { name: "Go", icon: "https://cdn.simpleicons.org/go/00ADD8" },
+  { name: "Vue", icon: "https://cdn.simpleicons.org/vuedotjs/4B7BEC" },
   { name: "PostgreSQL", icon: "https://cdn.simpleicons.org/postgresql/4169E1" },
-  { name: "Figma", icon: "https://cdn.simpleicons.org/figma/F24E1E" },
+  { name: "Java", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" },
   { name: "Docker", icon: "https://cdn.simpleicons.org/docker/2496ED" },
   { name: "Redis", icon: "https://cdn.simpleicons.org/redis/DC382D" },
-  { name: "GraphQL", icon: "https://cdn.simpleicons.org/graphql/E10098" },
+  { name: "MongoDB", icon: "https://cdn.simpleicons.org/mongodb/47A248" },
   { name: "Kubernetes", icon: "https://cdn.simpleicons.org/kubernetes/326CE5" },
 ];
 

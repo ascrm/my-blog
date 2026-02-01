@@ -74,7 +74,7 @@ export function OffsetSections() {
                 <img src={img} alt="Work" className="w-full h-full object-cover" />
               </div>
             ))}
-            <div className="absolute top-4 left-4 z-40 bg-black/50 backdrop-blur px-3 py-1 rounded text-[10px] tracking-widest font-bold">
+            <div className="absolute top-4 left-4 z-40 text-white bg-black/50 backdrop-blur px-3 py-1 rounded text-[10px] tracking-widest font-bold">
               MANY WORKS_
             </div>
           </div>
@@ -99,7 +99,7 @@ export function OffsetSections() {
                 <img src={img} alt="Archive" className="w-full h-full object-cover" />
               </div>
             ))}
-            <div className="absolute bottom-4 right-4 z-40 bg-black/50 backdrop-blur px-3 py-1 rounded text-[10px] tracking-widest font-bold">
+            <div className="absolute bottom-4 right-4 z-40 text-white bg-black/50 backdrop-blur px-3 py-1 rounded text-[10px] tracking-widest font-bold">
               THE VAULT_
             </div>
           </div>

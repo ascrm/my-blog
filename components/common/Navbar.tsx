@@ -5,7 +5,7 @@ import { useSite } from "./SiteContext";
 import { Sun, Moon, Languages } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 
 interface NavbarProps {
   scrolled: boolean;
@@ -14,8 +14,13 @@ interface NavbarProps {
 export function Navbar({ scrolled }: NavbarProps) {
   const { isDark, toggleTheme } = useSite();
   const params = useParams();
+  const pathname = usePathname();
   const locale = params.locale as string || 'zh';
   const t = useTranslations('nav');
+
+  // 计算切换后的路径，保持当前页面
+  const otherLocale = locale === 'zh' ? 'en' : 'zh';
+  const switchHref = pathname.replace(`/${locale}`, `/${otherLocale}`);
 
   const textMuted = isDark ? "text-gray-500" : "text-gray-400";
   const textMutedHover = isDark ? "hover:text-white" : "hover:text-black";
@@ -74,7 +79,7 @@ export function Navbar({ scrolled }: NavbarProps) {
           {/* 语言切换和主题切换按钮组 */}
           <div className="flex items-center gap-4 border-l pl-8 border-current/10">
             <a
-              href={locale === 'zh' ? '/en' : '/zh'}
+              href={switchHref}
               className="p-2 hover:opacity-60 transition-opacity flex items-center hover:cursor-pointer"
               title="Switch Language"
             >
