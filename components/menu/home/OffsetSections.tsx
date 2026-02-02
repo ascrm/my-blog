@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { useSite } from "@/components/common/SiteContext";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 import { useTranslations, useLocale } from "next-intl";
 import { useParams } from "next/navigation";
 

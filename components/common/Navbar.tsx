@@ -3,7 +3,7 @@
 import React from "react";
 import { useSite } from "./SiteContext";
 import { Sun, Moon, Languages } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 import { useTranslations } from "next-intl";
 import { useParams, usePathname } from "next/navigation";
 

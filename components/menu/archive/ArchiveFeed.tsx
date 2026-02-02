@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import { useSite } from "@/components/common/SiteContext";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 import { MessageSquare, Terminal, Palette, PenTool, Eye, Sprout, Loader2 } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
-import { getPosts, Post } from "@/lib/contentful";
+import { getPosts, Post } from "@/lib/api/contentful";
 
 interface Archive {
   date: string;

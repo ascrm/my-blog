@@ -3,7 +3,7 @@
 import React from "react";
 import { Mail, Github, Linkedin, Twitter, MapPin, Clock, Send } from "lucide-react";
 import { useSite } from "@/components/common/SiteContext";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 import { useTranslations } from "next-intl";
 
 export function ContactHeader() {

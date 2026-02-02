@@ -2,31 +2,20 @@
 
 import React, { useState, useEffect } from "react";
 import { Mail, Github, Linkedin, Twitter, Send, User, MessageSquare, ArrowUpRight, CheckCircle2, AlertTriangle } from "lucide-react";
-import { NewsletterForm } from "@/components/NewsletterForm";
+import { NewsletterForm } from "./NewsletterForm";
 import { useSite } from "@/components/common/SiteContext";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 import { useTranslations, useLocale } from "next-intl";
-import emailjs from '@emailjs/browser';
+import {
+  sendContactEmail,
+  getLimitStatus,
+  updateLimitData,
+  getRandomCaptcha,
+  MONTHLY_QUOTA,
+  RATE_LIMIT,
+} from "@/lib/api/emailjs";
 
 const MY_EMAIL = "casrillosylvi@gmail.com";
-
-// 每月邮件配额（EmailJS 免费版每月 200 条）
-const MONTHLY_QUOTA = 200;
-
-// 频率限制配置
-const RATE_LIMIT = {
-  maxPerDay: 5,      // 每天最多 5 封
-  cooldownMinutes: 30, // 冷却时间 30 分钟
-};
-
-// 验证码题目
-const CAPTCHA_QUESTIONS = [
-  { question: { zh: "请输入 7 + 3 = ?", en: "What is 7 + 3 = ?" }, answer: "10" },
-  { question: { zh: "请输入 12 - 4 = ?", en: "What is 12 - 4 = ?" }, answer: "8" },
-  { question: { zh: "请输入 5 × 6 = ?", en: "What is 5 × 6 = ?" }, answer: "30" },
-  { question: { zh: "请输入 20 ÷ 5 = ?", en: "What is 20 ÷ 5 = ?" }, answer: "4" },
-  { question: { zh: "请输入 9 + 6 = ?", en: "What is 9 + 6 = ?" }, answer: "15" },
-];
 
 const contactMethods = [
   {
@@ -67,7 +56,7 @@ export function ContactInfo() {
 
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [captcha, setCaptcha] = useState("");
-  const [captchaQuestion, setCaptchaQuestion] = useState(() => CAPTCHA_QUESTIONS[0]);
+  const [captchaQuestion, setCaptchaQuestion] = useState(() => getRandomCaptcha());
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -80,89 +69,33 @@ export function ContactInfo() {
 
   // 初始化验证码
   useEffect(() => {
-    const randomIndex = Math.floor(Math.random() * CAPTCHA_QUESTIONS.length);
-    setCaptchaQuestion(CAPTCHA_QUESTIONS[randomIndex]);
+    setCaptchaQuestion(getRandomCaptcha());
   }, []);
 
   // 从 localStorage 读取限制状态
   useEffect(() => {
-    const today = new Date().toDateString();
-    const savedData = localStorage.getItem('contactFormLimit');
-
-    if (savedData) {
-      try {
-        const data = JSON.parse(savedData);
-        const lastDate = new Date(data.date).toDateString();
-
-        if (lastDate === today) {
-          setRemainingToday(Math.max(0, RATE_LIMIT.maxPerDay - data.count));
-        } else {
-          // 新的一天，重置计数
-          setRemainingToday(RATE_LIMIT.maxPerDay);
-          localStorage.setItem('contactFormLimit', JSON.stringify({ date: new Date(), count: 0 }));
-        }
-
-        setTotalSent(data.totalSent || 0);
-        setQuotaWarning((data.totalSent || 0) >= MONTHLY_QUOTA - 10); // 剩余10封时警告
-
-        // 检查冷却时间
-        if (data.cooldownUntil && data.cooldownUntil > Date.now()) {
-          setCooldownEnd(data.cooldownUntil);
-        }
-      } catch (e) {
-        setRemainingToday(RATE_LIMIT.maxPerDay);
-      }
-    } else {
-      setRemainingToday(RATE_LIMIT.maxPerDay);
-    }
+    const { remainingToday: remaining, totalSent: sent, quotaWarning: warning } = getLimitStatus();
+    setRemainingToday(remaining);
+    setTotalSent(sent);
+    setQuotaWarning(warning);
   }, []);
 
-  const canSubmit = () => {
+  const canSubmit = (errorCallback: (msg: string) => void) => {
     if (quotaWarning || totalSent >= MONTHLY_QUOTA) {
-      setError(t('quotaReached'));
+      errorCallback(t('quotaReached'));
       return false;
     }
     if (remainingToday <= 0) {
-      setError(t('dailyLimitReached'));
+      errorCallback(t('dailyLimitReached'));
       return false;
     }
     if (cooldownEnd && cooldownEnd > Date.now()) {
       const minutes = Math.ceil((cooldownEnd - Date.now()) / 60000);
-      setError(t('cooldownMessage', { minutes }));
+      errorCallback(t('cooldownMessage', { minutes }));
       return false;
     }
     if (captcha !== captchaQuestion.answer) {
-      setError(t('captchaError'));
-      return false;
-    }
-    return true;
-  };
-
-  const updateLimitData = () => {
-    const savedData = localStorage.getItem('contactFormLimit');
-    let data = savedData ? JSON.parse(savedData) : { date: new Date(), count: 0, totalSent: 0, cooldownUntil: null };
-
-    const today = new Date().toDateString();
-    const lastDate = new Date(data.date).toDateString();
-
-    if (lastDate !== today) {
-      data.count = 0;
-      data.date = new Date();
-    }
-
-    data.count += 1;
-    data.totalSent = (data.totalSent || 0) + 1;
-    data.cooldownUntil = Date.now() + RATE_LIMIT.cooldownMinutes * 60 * 1000;
-
-    localStorage.setItem('contactFormLimit', JSON.stringify(data));
-
-    setRemainingToday(Math.max(0, RATE_LIMIT.maxPerDay - data.count));
-    setTotalSent(data.totalSent);
-    setCooldownEnd(data.cooldownUntil);
-    setQuotaWarning(data.totalSent >= MONTHLY_QUOTA - 10);
-
-    if (data.totalSent >= MONTHLY_QUOTA) {
-      setError(t('quotaReached'));
+      errorCallback(t('captchaError'));
       return false;
     }
     return true;
@@ -172,31 +105,29 @@ export function ContactInfo() {
     e.preventDefault();
     setError(null);
 
-    if (!canSubmit()) return;
+    if (!canSubmit((msg) => setError(msg))) return;
 
     setSending(true);
 
     try {
-      await emailjs.send(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'service_default',
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || 'template_default',
-        {
-          name: formData.name,
-          email: formData.email,
-          message: formData.message,
-          date: new Date().toLocaleString(),
-        },
-        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || 'public_key'
-      );
+      await sendContactEmail({
+        name: formData.name,
+        email: formData.email,
+        message: formData.message,
+      });
 
-      updateLimitData();
+      const updateResult = updateLimitData();
+      setRemainingToday(updateResult.remainingToday);
+      setTotalSent(updateResult.totalSent);
+      setCooldownEnd(updateResult.cooldownEnd);
+      setQuotaWarning(updateResult.quotaWarning);
+
       setSent(true);
       setFormData({ name: "", email: "", message: "" });
       setCaptcha("");
 
       // 重置验证码
-      const randomIndex = Math.floor(Math.random() * CAPTCHA_QUESTIONS.length);
-      setCaptchaQuestion(CAPTCHA_QUESTIONS[randomIndex]);
+      setCaptchaQuestion(getRandomCaptcha());
 
       setTimeout(() => setSent(false), 3000);
     } catch (error) {

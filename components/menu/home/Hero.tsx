@@ -4,7 +4,7 @@ import React from "react";
 import { Github, Twitter, Mail, ExternalLink, MapPin, Radio, Quote } from "lucide-react";
 import Image from "next/image";
 import { useSite } from "@/components/common/SiteContext";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 import { useTranslations } from "next-intl";
 
 export function Hero() {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 import { useSite } from "@/components/common/SiteContext";
 import { useTranslations, useLocale } from "next-intl";
 

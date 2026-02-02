@@ -3,7 +3,7 @@
 import React from "react";
 import { ArrowUp } from "lucide-react";
 import { useSite } from "./SiteContext";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 
 interface ScrollToTopProps {
   show: boolean;

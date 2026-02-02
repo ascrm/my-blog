@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { Github, Linkedin, MessageSquare, Twitter } from "lucide-react";
 import { useSite } from "@/components/common/SiteContext";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
 
