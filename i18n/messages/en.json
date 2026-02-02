@@ -58,7 +58,18 @@
         "label": "Twitter",
         "description": "Daily thoughts and updates"
       }
-    }
+    },
+    "verifyHuman": "Human Verification",
+    "remainingToday": "Remaining Today",
+    "monthlyUsed": "Monthly Used",
+    "quotaLow": "Quota Running Low",
+    "quotaLowDesc": "Only 10 emails left this month, please use wisely",
+    "dailyLimitReached": "Daily limit reached, please try again tomorrow",
+    "quotaReached": "Monthly quota exhausted",
+    "cooldownMessage": "Please wait {minutes} minutes before trying again",
+    "captchaError": "Incorrect answer, please try again",
+    "limitReached": "Limit Reached",
+    "sendError": "Failed to send, please try again"
   },
   "archive": {
     "title": "Archive",
@@ -107,6 +118,7 @@
     "subscribeDescription": "Subscribe to my newsletter for weekly tech trends and design inspiration.",
     "join": "Join",
     "emailPlaceholder": "Email",
+    "noPosts": "No posts yet",
     "status": {
       "evergreen": "Evergreen",
       "sprouting": "Sprouting",

@@ -1,13 +1,32 @@
 "use client";
 
-import React, { useState } from "react";
-import { Mail, Github, Linkedin, Twitter, Send, User, MessageSquare, ArrowUpRight, CheckCircle2 } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Mail, Github, Linkedin, Twitter, Send, User, MessageSquare, ArrowUpRight, CheckCircle2, AlertTriangle } from "lucide-react";
+import { NewsletterForm } from "@/components/NewsletterForm";
 import { useSite } from "@/components/common/SiteContext";
 import { cn } from "@/lib/utils";
 import { useTranslations, useLocale } from "next-intl";
 import emailjs from '@emailjs/browser';
 
 const MY_EMAIL = "casrillosylvi@gmail.com";
+
+// 每月邮件配额（EmailJS 免费版每月 200 条）
+const MONTHLY_QUOTA = 200;
+
+// 频率限制配置
+const RATE_LIMIT = {
+  maxPerDay: 5,      // 每天最多 5 封
+  cooldownMinutes: 30, // 冷却时间 30 分钟
+};
+
+// 验证码题目
+const CAPTCHA_QUESTIONS = [
+  { question: { zh: "请输入 7 + 3 = ?", en: "What is 7 + 3 = ?" }, answer: "10" },
+  { question: { zh: "请输入 12 - 4 = ?", en: "What is 12 - 4 = ?" }, answer: "8" },
+  { question: { zh: "请输入 5 × 6 = ?", en: "What is 5 × 6 = ?" }, answer: "30" },
+  { question: { zh: "请输入 20 ÷ 5 = ?", en: "What is 20 ÷ 5 = ?" }, answer: "4" },
+  { question: { zh: "请输入 9 + 6 = ?", en: "What is 9 + 6 = ?" }, answer: "15" },
+];
 
 const contactMethods = [
   {
@@ -47,25 +66,117 @@ export function ContactInfo() {
   const tMethods = useTranslations('contact.methods');
 
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const [captcha, setCaptcha] = useState("");
+  const [captchaQuestion, setCaptchaQuestion] = useState(() => CAPTCHA_QUESTIONS[0]);
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [quotaWarning, setQuotaWarning] = useState(false);
 
-  const borderColor = isDark ? "border-white/10" : "border-black/10";
-  const borderFocus = isDark ? "focus:border-blue-500/50" : "focus:border-blue-500/50";
-  const bgSubtle = isDark ? "bg-white/[0.02]" : "bg-black/[0.02]";
-  const bgHover = isDark ? "hover:bg-white/[0.03]" : "hover:bg-black/[0.03]";
-  const textSecondary = isDark ? "text-gray-400" : "text-gray-500";
-  const iconBg = isDark ? "bg-white/5" : "bg-black/5";
-  const inputBg = isDark ? "bg-zinc-900/50" : "bg-zinc-100/50";
-  const btnBg = isDark ? "bg-white text-black" : "bg-black text-white";
+  // 频率限制状态
+  const [remainingToday, setRemainingToday] = useState(0);
+  const [cooldownEnd, setCooldownEnd] = useState<number | null>(null);
+  const [totalSent, setTotalSent] = useState(0);
+
+  // 初始化验证码
+  useEffect(() => {
+    const randomIndex = Math.floor(Math.random() * CAPTCHA_QUESTIONS.length);
+    setCaptchaQuestion(CAPTCHA_QUESTIONS[randomIndex]);
+  }, []);
+
+  // 从 localStorage 读取限制状态
+  useEffect(() => {
+    const today = new Date().toDateString();
+    const savedData = localStorage.getItem('contactFormLimit');
+
+    if (savedData) {
+      try {
+        const data = JSON.parse(savedData);
+        const lastDate = new Date(data.date).toDateString();
+
+        if (lastDate === today) {
+          setRemainingToday(Math.max(0, RATE_LIMIT.maxPerDay - data.count));
+        } else {
+          // 新的一天，重置计数
+          setRemainingToday(RATE_LIMIT.maxPerDay);
+          localStorage.setItem('contactFormLimit', JSON.stringify({ date: new Date(), count: 0 }));
+        }
+
+        setTotalSent(data.totalSent || 0);
+        setQuotaWarning((data.totalSent || 0) >= MONTHLY_QUOTA - 10); // 剩余10封时警告
+
+        // 检查冷却时间
+        if (data.cooldownUntil && data.cooldownUntil > Date.now()) {
+          setCooldownEnd(data.cooldownUntil);
+        }
+      } catch (e) {
+        setRemainingToday(RATE_LIMIT.maxPerDay);
+      }
+    } else {
+      setRemainingToday(RATE_LIMIT.maxPerDay);
+    }
+  }, []);
+
+  const canSubmit = () => {
+    if (quotaWarning || totalSent >= MONTHLY_QUOTA) {
+      setError(t('quotaReached'));
+      return false;
+    }
+    if (remainingToday <= 0) {
+      setError(t('dailyLimitReached'));
+      return false;
+    }
+    if (cooldownEnd && cooldownEnd > Date.now()) {
+      const minutes = Math.ceil((cooldownEnd - Date.now()) / 60000);
+      setError(t('cooldownMessage', { minutes }));
+      return false;
+    }
+    if (captcha !== captchaQuestion.answer) {
+      setError(t('captchaError'));
+      return false;
+    }
+    return true;
+  };
+
+  const updateLimitData = () => {
+    const savedData = localStorage.getItem('contactFormLimit');
+    let data = savedData ? JSON.parse(savedData) : { date: new Date(), count: 0, totalSent: 0, cooldownUntil: null };
+
+    const today = new Date().toDateString();
+    const lastDate = new Date(data.date).toDateString();
+
+    if (lastDate !== today) {
+      data.count = 0;
+      data.date = new Date();
+    }
+
+    data.count += 1;
+    data.totalSent = (data.totalSent || 0) + 1;
+    data.cooldownUntil = Date.now() + RATE_LIMIT.cooldownMinutes * 60 * 1000;
+
+    localStorage.setItem('contactFormLimit', JSON.stringify(data));
+
+    setRemainingToday(Math.max(0, RATE_LIMIT.maxPerDay - data.count));
+    setTotalSent(data.totalSent);
+    setCooldownEnd(data.cooldownUntil);
+    setQuotaWarning(data.totalSent >= MONTHLY_QUOTA - 10);
+
+    if (data.totalSent >= MONTHLY_QUOTA) {
+      setError(t('quotaReached'));
+      return false;
+    }
+    return true;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+
+    if (!canSubmit()) return;
+
     setSending(true);
 
     try {
-      console.log("环境变量：", process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID, process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID, process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY);
-      // 使用 EmailJS 发送邮件
       await emailjs.send(
         process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'service_default',
         process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || 'template_default',
@@ -78,19 +189,34 @@ export function ContactInfo() {
         process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || 'public_key'
       );
 
+      updateLimitData();
       setSent(true);
       setFormData({ name: "", email: "", message: "" });
+      setCaptcha("");
+
+      // 重置验证码
+      const randomIndex = Math.floor(Math.random() * CAPTCHA_QUESTIONS.length);
+      setCaptchaQuestion(CAPTCHA_QUESTIONS[randomIndex]);
+
       setTimeout(() => setSent(false), 3000);
     } catch (error) {
       console.error('发送失败:', error);
-      // 如果 EmailJS 配置有问题，回退到 mailto
-      window.location.href = `mailto:${MY_EMAIL}?subject=来自网站的留言&body=${encodeURIComponent(
-        `姓名: ${formData.name}\n邮箱: ${formData.email}\n\n消息:\n${formData.message}`
-      )}`;
+      setError(t('sendError'));
     } finally {
       setSending(false);
     }
   };
+
+  const borderColor = isDark ? "border-white/10" : "border-black/10";
+  const borderFocus = isDark ? "focus:border-blue-500/50" : "focus:border-blue-500/50";
+  const bgSubtle = isDark ? "bg-white/[0.02]" : "bg-black/[0.02]";
+  const bgHover = isDark ? "hover:bg-white/[0.03]" : "hover:bg-black/[0.03]";
+  const textSecondary = isDark ? "text-gray-400" : "text-gray-500";
+  const iconBg = isDark ? "bg-white/5" : "bg-black/5";
+  const inputBg = isDark ? "bg-zinc-900/50" : "bg-zinc-100/50";
+  const btnBg = isDark ? "bg-white text-black" : "bg-black text-white";
+
+  const currentCaptchaText = locale === 'zh' ? captchaQuestion.question.zh : captchaQuestion.question.en;
 
   return (
     <div className="grid lg:grid-cols-12 gap-12">
@@ -148,25 +274,26 @@ export function ContactInfo() {
           <p className={cn("text-sm leading-relaxed mb-8 max-w-md", textSecondary)}>
             {t('newsletterDescription')}
           </p>
-          <div className={cn(
-            "flex gap-4 border-b-2 pb-3 focus-within:border-blue-500 transition-all duration-300",
-            isDark ? "border-white/10" : "border-black/10"
-          )}>
-            <input
-              type="email"
-              placeholder={t('subscribePlaceholder')}
-              className={cn(
-                "flex-grow bg-transparent text-sm focus:outline-none placeholder:opacity-30",
-                textSecondary
-              )}
-            />
-            <button className={cn(
-              "text-[10px] font-black uppercase tracking-widest hover:text-blue-500 transition-colors active:scale-90 cursor-pointer"
-            )}>
-              {t('subscribe')}
-            </button>
-          </div>
+          <NewsletterForm />
         </div>
+
+        {/* 配额提示 */}
+        {quotaWarning && (
+          <div className={cn(
+            "p-6 rounded-2xl border flex items-center gap-4",
+            isDark ? "bg-amber-500/10 border-amber-500/30" : "bg-amber-50 border-amber-200"
+          )}>
+            <AlertTriangle size={24} className="text-amber-500 flex-shrink-0" />
+            <div>
+              <p className={cn("text-sm font-bold", isDark ? "text-amber-400" : "text-amber-700")}>
+                {t('quotaLow')}
+              </p>
+              <p className={cn("text-xs opacity-70", textSecondary)}>
+                {t('quotaLowDesc')}
+              </p>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* 联系表单 */}
@@ -174,6 +301,17 @@ export function ContactInfo() {
         <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] opacity-30 mb-8">
           {t('sendMessage')}
         </h3>
+
+        {/* 剩余发送次数 */}
+        <div className="mb-6 flex items-center justify-between">
+          <span className={cn("text-xs font-mono", textSecondary)}>
+            {t('remainingToday')}: {remainingToday}/{RATE_LIMIT.maxPerDay}
+          </span>
+          <span className={cn("text-xs font-mono", textSecondary)}>
+            {t('monthlyUsed')}: {totalSent}/{MONTHLY_QUOTA}
+          </span>
+        </div>
+
         <div className={cn(
           "p-10 rounded-[2.5rem] border backdrop-blur-sm relative overflow-hidden",
           borderColor,
@@ -207,6 +345,16 @@ export function ContactInfo() {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-8">
+              {/* 错误提示 */}
+              {error && (
+                <div className={cn(
+                  "p-4 rounded-xl text-sm border animate-shake",
+                  isDark ? "bg-red-500/10 border-red-500/30 text-red-400" : "bg-red-50 border-red-200 text-red-600"
+                )}>
+                  {error}
+                </div>
+              )}
+
               <div className="space-y-6">
                 {/* 名字和邮箱输入框 */}
                 {[
@@ -264,21 +412,52 @@ export function ContactInfo() {
                     )}
                   />
                 </div>
+
+                {/* 验证码 */}
+                <div className="group space-y-3">
+                  <label className={cn(
+                    "flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all duration-300 transform",
+                    isDark ? "opacity-40 group-focus-within:opacity-100 group-focus-within:text-blue-500" : "opacity-40 group-focus-within:opacity-100 group-focus-within:text-blue-500",
+                    "group-focus-within:translate-x-1"
+                  )}>
+                    <AlertTriangle size={12} />
+                    {t('verifyHuman')}
+                  </label>
+                  <div className="flex items-center gap-3">
+                    <span className={cn("text-sm font-mono whitespace-nowrap", textSecondary)}>
+                      {currentCaptchaText}
+                    </span>
+                    <input
+                      type="text"
+                      value={captcha}
+                      onChange={(e) => setCaptcha(e.target.value)}
+                      placeholder="?"
+                      className={cn(
+                        "flex-1 px-5 h-14 rounded-2xl text-sm border transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-500/10",
+                        inputBg,
+                        borderColor,
+                        borderFocus,
+                        textSecondary
+                      )}
+                    />
+                  </div>
+                </div>
               </div>
 
               {/* 发送按钮 */}
               <button
                 type="submit"
-                disabled={sending}
+                disabled={sending || remainingToday <= 0 || totalSent >= MONTHLY_QUOTA}
                 className={cn(
                   "relative w-full h-16 rounded-2xl font-black text-xs uppercase tracking-[0.3em] flex items-center justify-center gap-3 transition-all duration-300 active:scale-[0.98] cursor-pointer overflow-hidden group",
                   sending ? "opacity-80" : "",
+                  (remainingToday <= 0 || totalSent >= MONTHLY_QUOTA) ? "opacity-50 cursor-not-allowed" : "",
                   btnBg
                 )}
               >
                 {/* Hover时的反光扫过动画 */}
                 <div className="absolute inset-0 w-1/2 h-full bg-white/20 -skew-x-[45deg] -translate-x-[150%] group-hover:translate-x-[250%] transition-transform duration-1000 ease-in-out pointer-events-none" />
-                
+
                 {sending ? (
                   <div className="flex items-center gap-3">
                     <div className="relative w-5 h-5">
@@ -287,6 +466,10 @@ export function ContactInfo() {
                     </div>
                     <span className="animate-pulse">{t('sending')}</span>
                   </div>
+                ) : remainingToday <= 0 ? (
+                  <span>{t('limitReached')}</span>
+                ) : totalSent >= MONTHLY_QUOTA ? (
+                  <span>{t('quotaReached')}</span>
                 ) : (
                   <>
                     <span className="group-hover:translate-x-[-4px] transition-transform duration-300">
