@@ -67,7 +67,7 @@ export function TechStack() {
   }, [activeTab]);
 
   return (
-    <section className="py-24 relative px-6">
+    <section className="pb-80 relative">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
           <div className="space-y-4">

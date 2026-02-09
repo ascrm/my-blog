@@ -105,7 +105,7 @@ export function OffsetSections() {
   const getLocalizedText = (zh: string, en: string) => locale === 'zh' ? zh : en;
 
   return (
-    <section className="py-20 md:py-60 space-y-40 md:space-y-80 px-6 overflow-hidden">
+    <section className="pb-20 md:pb-60 space-y-40 md:space-y-80 overflow-hidden">
       {/* 精选作品集 */}
       <div className="max-w-7xl mx-auto grid lg:grid-cols-12 gap-16 items-center">
         <div className="col-span-12 lg:col-span-5 space-y-12 text-[#2D2A26] dark:text-white">

@@ -20,7 +20,7 @@ export function Hero() {
   const iconOpacity = isDark ? "opacity-40" : "opacity-60";
 
   return (
-    <section className="relative flex items-center pt-12 pb-20">
+    <section className="relative flex items-center pt-12 pb-80">
       <div className="max-w-7xl mx-auto w-full grid grid-cols-12 gap-12 items-center">
         {/* 左侧文字区 */}
         <div className="col-span-12 lg:col-span-7 relative z-10">
