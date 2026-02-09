@@ -152,5 +152,22 @@
   "projectList": {
     "visitProject": "Visit Project",
     "techSpecs": "Tech Specs"
+  },
+  "workHeader": {
+    "filterCategories": "项目分类检索",
+    "filterByCategories": "Filter by Categories",
+    "projectsFound": "个项目已找到",
+    "projectsFoundEn": "Projects Found",
+    "selectedWorks": "精选作品集",
+    "selectedWorksEn": "SELECTED WORKS",
+    "craftingDigitalExperiences": "创造数字体验",
+    "craftingDigitalExperiencesEn": "Crafting Digital Experiences",
+    "focusOnBuilding": "专注于构建高性能、可扩展的 Web 应用。从系统架构到交互设计，我致力于将复杂的想法转化为优雅的解决方案。",
+    "focusOnBuildingEn": "Focused on building high-performance, scalable web applications. From system architecture to interaction design, I aim to transform complex ideas into elegant solutions.",
+    "timeline": "Timeline",
+    "projectOverview": "项目概述",
+    "projectOverviewEn": "PROJECT OVERVIEW",
+    "visitProject": "访问项目",
+    "visitProjectEn": "VISIT PROJECT"
   }
 }
