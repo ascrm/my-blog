@@ -110,7 +110,11 @@
     "copyright": "版权所有。"
   },
   "techStack": {
-    "title": "技术栈 / Technology Stack"
+    "title": "技术栈",
+    "subtitle": "SKILLS & CAPABILITIES",
+    "frontend": "前端",
+    "backend": "后端",
+    "tools": "工具"
   },
   "archiveFeed": {
     "readFullPost": "阅读全文",

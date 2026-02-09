@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { cn } from "@/lib/utils/utils";
+import { useSite } from "./SiteContext";
 
 interface BackgroundProps {
   mousePos: { x: number; y: number };
@@ -9,16 +9,16 @@ interface BackgroundProps {
 }
 
 export function Background({ mousePos, isDark }: BackgroundProps) {
-  const glowColor = isDark ? "rgba(255, 255, 255, 0.05)" : "rgba(0, 0, 0, 0.03)";
-  const gridColor = isDark ? "%23ffffff" : "%23000000";
+  // 使用蓝色聚光灯效果 (RGB: 59, 130, 246 - blue)
+  const spotlightColor = isDark ? "rgba(59, 130, 246, 0.12)" : "rgba(59, 130, 246, 0.04)";
 
   return (
     <>
-      {/* 动态光晕效果 */}
+      {/* 鼠标跟随聚光灯效果 */}
       <div
-        className="pointer-events-none fixed inset-0 z-30 transition-opacity duration-300 opacity-50"
+        className="pointer-events-none fixed inset-0 z-0 transition-opacity duration-500"
         style={{
-          background: `radial-gradient(600px at ${mousePos.x}px ${mousePos.y}px, ${glowColor}, transparent 80%)`,
+          background: `radial-gradient(800px circle at ${mousePos.x}px ${mousePos.y}px, ${spotlightColor}, transparent 80%)`,
         }}
       />
     </>

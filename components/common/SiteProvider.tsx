@@ -57,9 +57,9 @@ function SiteProviderContent({ children }: SiteProviderProps) {
     };
   }, []);
 
-  // 根据主题设置样式
-  const bgColor = isDark ? "#111111" : "#fafafa";
-  const textColor = isDark ? "#f0f0f0" : "#1a1a1a";
+  // 根据主题设置样式 - 白天模式：#f8fafc，夜晚模式：#0b0b0b
+  const bgColor = isDark ? "#0b0b0b" : "#f8fafc";
+  const textColor = isDark ? "white" : "black";
 
   return (
     <SiteContext.Provider value={{ isDark, toggleTheme }}>

@@ -1,12 +1,87 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Plus } from "lucide-react";
 import { useSite } from "@/components/common/SiteContext";
 import { cn } from "@/lib/utils/utils";
 import { useTranslations, useLocale } from "next-intl";
 import { useParams } from "next/navigation";
+
+// ModernImageStack 组件 - 重新设计的图片堆叠方案
+function ModernImageStack({ images, isDark, reversed = false }: { images: string[]; isDark: boolean; reversed?: boolean }) {
+  const [isHovered, setIsHovered] = useState(false);
+
+  const stackItems = [
+    {
+      initial: { x: reversed ? 45 : -45, y: 35, rotate: reversed ? 8 : -8, scale: 0.9, opacity: 0.55 },
+      hover: { x: reversed ? 85 : -85, y: 65, rotate: reversed ? 14 : -14, scale: 0.92, opacity: 0.85 }
+    },
+    {
+      initial: { x: reversed ? -30 : 30, y: -20, rotate: reversed ? -4 : 4, scale: 0.95, opacity: 0.75 },
+      hover: { x: reversed ? -80 : 80, y: -45, rotate: reversed ? -8 : 8, scale: 0.98, opacity: 0.95 }
+    },
+    {
+      initial: { x: 0, y: 0, rotate: 0, scale: 1, opacity: 1 },
+      hover: { x: 0, y: 0, rotate: reversed ? 1.5 : -1.5, scale: 1.05, opacity: 1 }
+    }
+  ];
+
+  return (
+    <div
+      className="relative w-full aspect-square md:aspect-[4/3.2] max-w-xl mx-auto flex items-center justify-center"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* 装饰性背景发光 */}
+      <div className={cn(
+        "absolute inset-0 rounded-[4rem] transition-all duration-1000 blur-[100px]",
+        isDark ? "bg-blue-600/8" : "bg-blue-400/5",
+        isHovered ? "opacity-100 scale-110" : "opacity-0 scale-90"
+      )} />
+
+      {stackItems.map((item, i) => {
+        const state = isHovered ? item.hover : item.initial;
+        const imgIndex = i % images.length;
+
+        return (
+          <div
+            key={i}
+            className={cn(
+              "absolute w-[85%] aspect-video rounded-3xl border transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] overflow-hidden",
+              isDark ? "border-white/10 shadow-2xl shadow-black" : "border-black/5 shadow-xl shadow-black/[0.05]",
+              i === 2 ? "z-30" : i === 1 ? "z-20" : "z-10"
+            )}
+            style={{
+              transform: `translate(${state.x}px, ${state.y}px) rotate(${state.rotate}deg) scale(${state.scale})`,
+              opacity: state.opacity,
+              backgroundColor: isDark ? '#1a1a1a' : '#fff'
+            }}
+          >
+            <img
+              src={images[imgIndex]}
+              className={cn(
+                "w-full h-full object-cover transition-all duration-1000",
+                isHovered && i === 2 ? "scale-110" : "scale-100",
+                !isHovered && i !== 2 ? "grayscale-[0.2]" : "grayscale-0"
+              )}
+              alt={`Project stack ${i}`}
+            />
+            {/* 顶层光效 */}
+            {i === 2 && (
+              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+            )}
+            {/* 非活跃态微遮罩 */}
+            <div className={cn(
+              "absolute inset-0 transition-opacity duration-500 pointer-events-none",
+              !isHovered && i !== 2 ? "bg-black/[0.03] dark:bg-black/10" : "opacity-0"
+            )} />
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 
 const workImages = [
   "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
@@ -26,103 +101,84 @@ export function OffsetSections() {
   const locale = params.locale as string || 'zh';
   const t = useTranslations('offsetSections');
 
-  const borderColor = isDark ? "border-white/10" : "border-black/10";
-  const textSecondary = isDark ? "text-gray-400" : "text-gray-600";
-  const textMuted = isDark ? "text-gray-500" : "text-gray-400";
-  const hoverText = isDark ? "group-hover:text-blue-500" : "group-hover:text-blue-600";
-
   // 辅助函数获取本地化文本
   const getLocalizedText = (zh: string, en: string) => locale === 'zh' ? zh : en;
 
   return (
-    <section className="py-40 space-y-80">
+    <section className="py-20 md:py-60 space-y-40 md:space-y-80 px-6 overflow-hidden">
       {/* 精选作品集 */}
-      <div className="grid lg:grid-cols-12 gap-12 items-center">
-        <div className="lg:col-span-5 relative z-10">
-          <span className="font-mono text-xs text-blue-500 mb-4 block tracking-widest uppercase">
-            Portfolio 01
-          </span>
-          <h2 className="text-5xl font-black mb-8 italic leading-tight">
-            {t('featuredWorks')}
-          </h2>
-          <p className="text-lg leading-relaxed mb-10 font-light opacity-60">
-            {t('featuredWorksDesc')}
-          </p>
+      <div className="max-w-7xl mx-auto grid lg:grid-cols-12 gap-16 items-center">
+        <div className="col-span-12 lg:col-span-5 space-y-12 text-[#2D2A26] dark:text-white">
+          <div className="space-y-6">
+            <div className="flex items-center gap-4">
+              <span className="text-5xl font-black italic opacity-10">01</span>
+              <div className="h-[1px] flex-1 bg-current opacity-10" />
+            </div>
+            <h2 className="text-5xl md:text-7xl font-black italic tracking-tighter leading-[0.85] uppercase">
+              {t('featuredWorks')}
+            </h2>
+            <p className="text-xl font-light opacity-50 leading-relaxed max-w-md text-[#4A443D] dark:text-white/60">
+              {t('featuredWorksDesc')}
+            </p>
+          </div>
           <Link
             href={`/${locale}/work`}
             className={cn(
-              "group flex items-center gap-4 text-xs font-bold uppercase tracking-[0.3em] transition-all hover:gap-6 cursor-pointer"
+              "group relative shadow inline-flex items-center gap-6 px-6 py-4 rounded-xl transition-all duration-300 text-sm font-black tracking-[0.2em] uppercase cursor-pointer",
+              isDark
+                ? "bg-white/5 text-white hover:bg-white/10 shadow-2xl shadow-black/50 border border-white/5"
+                : "bg-white text-black hover:shadow-2xl shadow-black/5 border border-black/[0.05]"
             )}
           >
-            {t('viewAllWorks')} <ArrowUpRight className={hoverText} />
+            <span>{locale === 'zh' ? '查看全部作品' : 'VIEW ALL WORKS'}</span>
+            <ArrowUpRight size={18} className={cn(
+              "transition-all duration-300 group-hover:-translate-y-1",
+              isDark ? "group-hover:text-blue-400" : "group-hover:text-blue-600"
+            )} />
           </Link>
         </div>
 
-        <div className="lg:col-span-7 flex justify-center items-center relative">
-          <div className="relative w-full aspect-video max-w-lg group">
-            {workImages.map((img, i) => (
-              <div
-                key={i}
-                className={cn(
-                  "absolute inset-0 rounded-2xl border overflow-hidden shadow-2xl transition-all duration-500 transform",
-                  borderColor,
-                  i === 0 && "z-30 translate-x-0 translate-y-0 rotate-0 group-hover:-translate-y-4",
-                  i === 1 && "z-20 translate-x-6 translate-y-6 rotate-3 opacity-60 group-hover:translate-x-12 group-hover:translate-y-12",
-                  i === 2 && "z-10 translate-x-12 translate-y-12 rotate-6 opacity-30 group-hover:translate-x-24 group-hover:translate-y-24"
-                )}
-              >
-                <img src={img} alt="Work" className="w-full h-full object-cover" />
-              </div>
-            ))}
-            <div className="absolute top-4 left-4 z-40 text-white bg-black/50 backdrop-blur px-3 py-1 rounded text-[10px] tracking-widest font-bold">
-              MANY WORKS_
-            </div>
-          </div>
+        <div className="col-span-12 lg:col-span-7">
+          <ModernImageStack images={workImages} isDark={isDark} reversed={false} />
         </div>
       </div>
 
       {/* 数字档案室 */}
-      <div className="grid lg:grid-cols-12 gap-12 items-center">
-        <div className="lg:col-span-7 lg:order-first order-last flex justify-center items-center relative">
-          <div className="relative w-full aspect-video max-w-lg group">
-            {archiveImages.map((img, i) => (
-              <div
-                key={i}
-                className={cn(
-                  "absolute inset-0 rounded-2xl border overflow-hidden shadow-2xl transition-all duration-500 transform",
-                  borderColor,
-                  i === 0 && "z-30 translate-x-0 translate-y-0 rotate-0 group-hover:-translate-y-4",
-                  i === 1 && "z-20 -translate-x-6 translate-y-6 -rotate-3 opacity-60 group-hover:-translate-x-12 group-hover:translate-y-12",
-                  i === 2 && "z-10 -translate-x-12 translate-y-12 -rotate-6 opacity-30 group-hover:-translate-x-24 group-hover:translate-y-24"
-                )}
-              >
-                <img src={img} alt="Archive" className="w-full h-full object-cover" />
-              </div>
-            ))}
-            <div className="absolute bottom-4 right-4 z-40 text-white bg-black/50 backdrop-blur px-3 py-1 rounded text-[10px] tracking-widest font-bold">
-              THE VAULT_
-            </div>
-          </div>
+      <div className="max-w-7xl mx-auto grid lg:grid-cols-12 gap-16 items-center">
+        <div className="col-span-12 lg:col-span-7 lg:order-first order-last">
+          <ModernImageStack images={archiveImages} isDark={isDark} reversed={true} />
         </div>
 
-        <div className="lg:col-span-5">
-          <span className="font-mono text-xs text-emerald-500 mb-4 block tracking-widest uppercase">
-            Archive 02
-          </span>
-          <h2 className="text-5xl font-black mb-8 italic leading-tight">
-            {t('digitalArchive')}
-          </h2>
-          <p className="text-lg leading-relaxed mb-10 font-light opacity-60">
-            {t('digitalArchiveDesc')}
-          </p>
-          <Link
-            href={`/${locale}/archive`}
-            className={cn(
-              "group flex items-center gap-4 text-xs font-bold uppercase tracking-[0.3em] transition-all hover:gap-6 cursor-pointer"
-            )}
-          >
-            {t('enterArchive')} <ArrowUpRight className="group-hover:text-emerald-500" />
-          </Link>
+        <div className="col-span-12 lg:col-span-5 space-y-12 order-1 lg:order-2 text-right text-[#2D2A26] dark:text-white">
+          <div className="space-y-6">
+            <div className="flex flex-row-reverse items-center gap-4">
+              <span className="text-5xl font-black italic opacity-10">02</span>
+              <div className="h-[1px] flex-1 bg-current opacity-10" />
+            </div>
+            <h2 className="text-5xl md:text-7xl font-black italic tracking-tighter leading-[0.85] uppercase">
+              {t('digitalArchive')}
+            </h2>
+            <p className="text-xl font-light opacity-50 leading-relaxed max-w-md ml-auto text-[#4A443D] dark:text-white/60">
+              {t('digitalArchiveDesc')}
+            </p>
+          </div>
+          <div className="flex justify-end">
+            <Link
+              href={`/${locale}/archive`}
+              className={cn(
+                "group relative inline-flex shadow items-center gap-4 px-6 py-4 rounded-xl transition-all duration-300 text-sm font-black tracking-[0.2em] uppercase cursor-pointer",
+                isDark
+                  ? "bg-white/5 text-white hover:bg-white/10 shadow-2xl shadow-black/50 border border-white/5"
+                  : "bg-white text-black hover:shadow-2xl shadow-black/5 border border-black/[0.05]"
+              )}
+            >
+              <span>{locale === 'zh' ? '进入深度归档' : 'DEEP ARCHIVE'}</span>
+              <Plus size={18} className={cn(
+                "transition-all duration-300 group-hover:rotate-180",
+                isDark ? "group-hover:text-emerald-400" : "group-hover:text-emerald-600"
+              )} />
+            </Link>
+          </div>
         </div>
       </div>
     </section>

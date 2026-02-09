@@ -110,7 +110,11 @@
     "copyright": "All rights reserved."
   },
   "techStack": {
-    "title": "Technology Stack / 技术栈"
+    "title": "Tech Stack",
+    "subtitle": "SKILLS & CAPABILITIES",
+    "frontend": "Frontend",
+    "backend": "Backend",
+    "tools": "Tools"
   },
   "archiveFeed": {
     "readFullPost": "Read Full Post",
