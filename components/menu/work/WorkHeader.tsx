@@ -5,9 +5,7 @@ import { Search, ArrowLeft } from "lucide-react";
 import { useSite } from "@/components/common/SiteContext";
 import { useLocale, useTranslations } from "next-intl";
 import { cn } from "@/lib/utils/utils";
-
-// 分类数据
-const categories = ["All", "Backend", "Frontend", "AI", "Mobile", "Cloud", "Security", "Blockchain"];
+import { categories, projects } from "@/mocks/work";
 
 interface WorkHeaderProps {
   filteredCount?: number;
@@ -136,3 +134,6 @@ export function WorkHeader({
     </div>
   );
 }
+
+// 重新导出供外部使用
+export { projects, categories };

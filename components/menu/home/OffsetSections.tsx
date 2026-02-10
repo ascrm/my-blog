@@ -2,10 +2,11 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowUpRight, Plus } from "lucide-react";
 import { useSite } from "@/components/common/SiteContext";
 import { cn } from "@/lib/utils/utils";
-import { useTranslations, useLocale } from "next-intl";
+import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
 
 // ModernImageStack 组件 - 重新设计的图片堆叠方案
@@ -58,10 +59,12 @@ function ModernImageStack({ images, isDark, reversed = false }: { images: string
               backgroundColor: isDark ? '#1a1a1a' : '#fff'
             }}
           >
-            <img
+            <Image
               src={images[imgIndex]}
+              fill
+              unoptimized
               className={cn(
-                "w-full h-full object-cover transition-all duration-1000",
+                "object-cover transition-all duration-1000",
                 isHovered && i === 2 ? "scale-110" : "scale-100",
                 !isHovered && i !== 2 ? "grayscale-[0.2]" : "grayscale-0"
               )}
@@ -100,9 +103,6 @@ export function OffsetSections() {
   const params = useParams();
   const locale = params.locale as string || 'zh';
   const t = useTranslations('offsetSections');
-
-  // 辅助函数获取本地化文本
-  const getLocalizedText = (zh: string, en: string) => locale === 'zh' ? zh : en;
 
   return (
     <section className="pb-20 md:pb-60 space-y-40 md:space-y-80 overflow-hidden">
@@ -149,7 +149,7 @@ export function OffsetSections() {
           <ModernImageStack images={archiveImages} isDark={isDark} reversed={true} />
         </div>
 
-        <div className="col-span-12 lg:col-span-5 space-y-12 order-1 lg:order-2 text-right text-[#2D2A26] dark:text-white">
+        <div className="col-span-12 lg:col-span-5 pr-3 space-y-12 order-1 lg:order-2 text-right text-[#2D2A26] dark:text-white">
           <div className="space-y-6">
             <div className="flex flex-row-reverse items-center gap-4">
               <span className="text-5xl font-black italic opacity-10">02</span>

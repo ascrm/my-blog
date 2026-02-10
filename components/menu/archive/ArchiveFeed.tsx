@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
+import Image from "next/image";
 import { useSite } from "@/components/common/SiteContext";
 import { cn } from "@/lib/utils/utils";
-import { useTranslations, useLocale } from "next-intl";
+import { useTranslations } from "next-intl";
 import { MessageSquare, Terminal, Palette, PenTool, Eye, Sprout, Loader2 } from "lucide-react";
 // import { getPosts, Post } from "@/lib/api/contentful";
 
@@ -92,16 +93,6 @@ const getCategoryIcon = (category: string) => {
   }
 };
 
-// 根据状态获取颜色
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case "Evergreen": return "bg-green-500";
-    case "Sprouting": return "bg-emerald-300";
-    case "Evolving": return "bg-amber-500";
-    case "Fading": return "bg-gray-500";
-    default: return "bg-green-500";
-  }
-};
 
 // 从 Contentful 文章转换为本地面试格式
 // const transformPost = (post: Post): Archive => {
@@ -140,27 +131,13 @@ interface ArchiveFeedProps {
 
 export function ArchiveFeed({ archives = MOCK_ARCHIVES, loading = false }: ArchiveFeedProps) {
   const { isDark } = useSite();
-  const locale = useLocale();
   const t = useTranslations('archiveFeed');
-  const tStatus = useTranslations('archiveFeed.status');
 
   const bgCard = isDark
     ? "bg-white/5 border-white/5 hover:border-white/10"
     : "bg-white border-white/50 hover:border-black/10";
-  const textPrimary = isDark ? "text-[#f0f0f0]" : "text-[#1a1a1a]";
   const textSecondary = isDark ? "text-gray-500" : "text-gray-400";
   const dividerColor = isDark ? "border-white/5" : "border-black/5";
-
-  // 获取状态翻译
-  const getStatusLabel = (status: string) => {
-    switch (status) {
-      case "Evergreen": return tStatus('evergreen');
-      case "Sprouting": return tStatus('sprouting');
-      case "Evolving": return tStatus('evolving');
-      case "Fading": return tStatus('fading');
-      default: return status;
-    }
-  };
 
   // 获取文章（使用模拟数据）
   // useEffect(() => {
@@ -204,22 +181,23 @@ export function ArchiveFeed({ archives = MOCK_ARCHIVES, loading = false }: Archi
   return (
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 pb-80">
       {archives.map((article, i) => {
-        const statusColor = getStatusColor(article.status);
         return (
           <div
             key={i}
             className={cn(
-              "p-10 rounded-[2.5rem] shadow border group cursor-pointer transition-all duration-500 hover:-translate-y-1 relative flex flex-col min-h-[340px]",
+              "p-6  rounded-[2.5rem] shadow border group cursor-pointer transition-all duration-500 hover:-translate-y-1 relative flex flex-col min-h-[340px]",
               bgCard
             )}
           >
             {/* 封面图 */}
             {article.cover && (
-              <div className="w-[calc(100%+5rem)] h-48 -mx-10 -mt-10 mb-8 overflow-hidden rounded-t-[2.5rem]">
-                <img
+              <div className="-mx-6 -mt-6 mb-6 h-48 overflow-hidden rounded-t-[2.5rem] relative">
+                <Image
                   src={article.cover}
                   alt={article.title}
-                  className="w-full h-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105"
+                  fill
+                  className="object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105"
+                  unoptimized
                 />
               </div>
             )}

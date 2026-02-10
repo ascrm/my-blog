@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { cn } from "@/lib/utils/utils";
 import { useSite } from "@/components/common/SiteContext";
 import { useTranslations, useLocale } from "next-intl";
@@ -23,7 +23,6 @@ export function NewsletterForm({ className }: NewsletterFormProps) {
 
   const textSecondary = isDark ? "text-gray-400" : "text-gray-500";
   const borderColor = isDark ? "border-white/10" : "border-black/10";
-  const iconBg = isDark ? "bg-white/5" : "bg-black/5";
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

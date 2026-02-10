@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import { useSite } from "@/components/common/SiteContext";
 import { cn } from "@/lib/utils/utils";
 import { useTranslations } from "next-intl";
@@ -36,7 +37,7 @@ export function TechStack() {
       { name: "Vite", slug: "vite", color: "646CFF" },
     ],
     backend: [
-      { name: "Java", slug: "openjdk", color: "FFA500" },
+      { name: "Java", slug: "openjdk", color: isDark ? "FFFFFF" : "ED8B00" },
       { name: "Spring", slug: "spring", color: "6DB33F" },
       { name: "Node.js", slug: "nodedotjs", color: "339933" },
       { name: "PostgreSQL", slug: "postgresql", color: "4169E1" },
@@ -51,8 +52,8 @@ export function TechStack() {
       { name: "Git", slug: "git", color: "F05032" },
       { name: "GitHub", slug: "github", color: isDark ? "FFFFFF" : "181717" },
       { name: "GitLab", slug: "gitlab", color: "FC6D26" },
-      { name: "Gemini", slug: "google", color: "8E75FF" },
-      { name: "Claude Code", slug: "anthropic", color: "D988FF" },
+      { name: "Gemini", slug: "googlegemini", color: "4E75E6" },
+      { name: "Claude Code", slug: "claude", color: "FC6D26" },
     ]
   };
 
@@ -131,10 +132,13 @@ export function TechStack() {
                   className="absolute inset-0 blur-lg opacity-0 group-hover:opacity-60 transition-opacity duration-300"
                   style={{ backgroundColor: `#${skill.color}` }}
                 />
-                <img
+                <Image
+                  key={`${skill.slug}-${skill.color}`}
                   src={`https://cdn.simpleicons.org/${skill.slug}/${skill.color}`}
                   alt={skill.name}
-                  className="w-full h-full object-contain relative z-10 transition-transform duration-500 group-hover:scale-125 group-hover:rotate-6"
+                  fill
+                  className="object-contain relative z-10 transition-transform duration-500 group-hover:scale-125 group-hover:rotate-6"
+                  unoptimized
                 />
               </div>
               <span className="font-bold text-sm tracking-tight text-[#2D2A26] dark:text-white truncate">
