@@ -28,23 +28,15 @@ export function generateStaticParams() {
 }
 
 export default async function RootLayout({
-  children,
-  params
+  children
 }: {
   children: React.ReactNode;
-  params: Promise<{locale: string}>;
 }) {
-  const {locale: paramsLocale} = await params;
-  // Ensure that the incoming `locale` is valid, otherwise use default
-  const locale = routing.locales.includes(paramsLocale as any)
-    ? paramsLocale 
-    : routing.defaultLocale;
-
   // Providing all messages to the client
   const messages = await getMessages();
 
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body className={`${sora.variable} ${inter.variable} ${notoSerifSC.variable} font-inter`}>
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider>
