@@ -146,7 +146,7 @@ export function ArchiveFeed({ archives = MOCK_ARCHIVES, loading = false }: Archi
 
   const bgCard = isDark
     ? "bg-white/5 border-white/5 hover:border-white/10"
-    : "bg-black/5 border-black/5 hover:border-black/10";
+    : "bg-white border-white/50 hover:border-black/10";
   const textPrimary = isDark ? "text-[#f0f0f0]" : "text-[#1a1a1a]";
   const textSecondary = isDark ? "text-gray-500" : "text-gray-400";
   const dividerColor = isDark ? "border-white/5" : "border-black/5";
@@ -209,7 +209,7 @@ export function ArchiveFeed({ archives = MOCK_ARCHIVES, loading = false }: Archi
           <div
             key={i}
             className={cn(
-              "p-10 rounded-[2.5rem] border group cursor-pointer transition-all duration-500 hover:-translate-y-1 relative flex flex-col min-h-[340px]",
+              "p-10 rounded-[2.5rem] shadow border group cursor-pointer transition-all duration-500 hover:-translate-y-1 relative flex flex-col min-h-[340px]",
               bgCard
             )}
           >

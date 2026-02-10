@@ -10,10 +10,11 @@
     "greeting": "Hello, I'm",
     "name": "Zhang Hengyuan (ascrm)",
     "niceToMeetYou": "Nice to meet you",
-    "bio": "As an independent developer and full-stack engineer, I'm passionate about building digital products that truly solve problems. I pursue extreme code aesthetics and seek the most elegant solutions in complex tech stacks.",
+    "bio": "As a full-stack engineer, I am passionate about turning ideas in my mind into reality through code. This is my digital lab, it houses the 'logic fragments' I've salvaged from my sea of thoughts (blog archive), and showcases the 'creations' I've materialized from inspiration (portfolio).",
     "getResume": "Get Resume",
     "building": "Building something new...",
-    "quote": "Stay hungry, stay extreme. Connecting the last 1 pixel between design and code."
+    "quote": "Stay hungry, stay extreme. Connecting the last 1 pixel between design and code.",
+    "location": "Shanghai，China"
   },
   "home": {
     "helloFriend": "Hello, Friend.",

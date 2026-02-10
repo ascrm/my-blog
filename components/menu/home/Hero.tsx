@@ -11,9 +11,9 @@ export function Hero() {
   const { isDark } = useSite();
   const t = useTranslations('hero');
 
-  const textPrimary = isDark ? "text-white" : "text-black";
-  const textSecondary = isDark ? "text-gray-400" : "text-gray-600";
-  const textMuted = isDark ? "text-gray-500" : "text-gray-400";
+  // const textPrimary = isDark ? "text-white" : "text-black";
+  // const textSecondary = isDark ? "text-gray-400" : "text-gray-600";
+  // const textMuted = isDark ? "text-gray-500" : "text-gray-400";
   const borderColor = isDark ? "border-white/10" : "border-black/10";
   const bgSubtle = isDark ? "bg-white/[0.02]" : "bg-black/[0.02]";
   const btnBg = isDark ? "bg-white text-black" : "bg-black text-white";
@@ -21,24 +21,23 @@ export function Hero() {
 
   return (
     <section className="relative flex items-center pt-12 pb-80">
-      <div className="max-w-7xl mx-auto w-full grid grid-cols-12 gap-12 items-center">
+      <div className="max-w-7xl mx-auto w-full grid grid-cols-18 gap-12 items-center">
         {/* 左侧文字区 */}
-        <div className="col-span-12 lg:col-span-7 relative z-10">
+        <div className="col-span-12 lg:col-span-12 relative z-10">
           <div className="animate-in fade-in slide-in-from-left-8 duration-1000">
             <h1 className="flex flex-col gap-2 mb-10">
               <span className="text-5xl md:text-8xl font-black tracking-tighter leading-[0.9] opacity-90">
                 {t('greeting')}
               </span>
               <span className={cn(
-                "text-5xl md:text-8xl font-black tracking-tighter leading-[0.9] italic",
-                "bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-emerald-500"
+                "text-5xl md:text-8xl font-black tracking-tighter italic py-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-emerald-500"
               )}
               style={{ WebkitTextStroke: isDark ? '1px rgba(255,255,255,0.1)' : '1px rgba(0,0,0,0.1)' }}>
                 {t('name')}
               </span>
-              <span className="text-5xl md:text-8xl font-black tracking-tighter leading-[0.9]">
-                {t('niceToMeetYou')}
-              </span>
+              {/*<span className="text-5xl md:text-8xl font-black tracking-tighter leading-[0.9]">*/}
+              {/*  {t('niceToMeetYou')}*/}
+              {/*</span>*/}
             </h1>
 
             <p className="text-lg md:text-xl max-w-xl leading-relaxed mb-12 font-light opacity-60">
@@ -66,7 +65,7 @@ export function Hero() {
         </div>
 
         {/* 右侧信息区 */}
-        <div className="col-span-12 lg:col-span-5 flex flex-col items-center lg:items-end w-full">
+        <div className="col-span-12 lg:col-span-6 flex flex-col items-center lg:items-end w-full">
           <div className="flex flex-col w-fit">
             {/* 头像 */}
             <div className="relative mb-8 group self-center lg:self-start">
@@ -93,7 +92,7 @@ export function Hero() {
             <div className={cn("space-y-4 text-left", isDark ? "text-gray-400" : "text-gray-600")}>
               <div className="flex items-center gap-3 text-sm font-mono">
                 <MapPin size={14} className="text-blue-500" />
-                <span>Shanghai, China</span>
+                <span>{t('location')}</span>
               </div>
               <div className="flex items-center gap-3 text-sm font-mono">
                 <Radio size={14} className="text-emerald-500 animate-pulse" />

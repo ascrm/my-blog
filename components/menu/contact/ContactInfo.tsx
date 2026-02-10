@@ -5,14 +5,12 @@ import { Mail, Github, Linkedin, Twitter, Send, User, MessageSquare, ArrowUpRigh
 import { NewsletterForm } from "./NewsletterForm";
 import { useSite } from "@/components/common/SiteContext";
 import { cn } from "@/lib/utils/utils";
-import { useTranslations, useLocale } from "next-intl";
+import { useTranslations } from "next-intl";
 import {
   sendContactEmail,
   getLimitStatus,
   updateLimitData,
-  getRandomCaptcha,
-  MONTHLY_QUOTA,
-  RATE_LIMIT,
+  LOCAL_LIMIT,
 } from "@/lib/api/emailjs";
 
 const MY_EMAIL = "casrillosylvi@gmail.com";
@@ -50,13 +48,11 @@ const contactMethods = [
 
 export function ContactInfo() {
   const { isDark } = useSite();
-  const locale = useLocale();
   const t = useTranslations('contact');
   const tMethods = useTranslations('contact.methods');
 
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
-  const [captcha, setCaptcha] = useState("");
-  const [captchaQuestion, setCaptchaQuestion] = useState(() => getRandomCaptcha());
+  const [honeypot, setHoneypot] = useState("");
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -65,23 +61,21 @@ export function ContactInfo() {
   // 频率限制状态
   const [remainingToday, setRemainingToday] = useState(0);
   const [cooldownEnd, setCooldownEnd] = useState<number | null>(null);
-  const [totalSent, setTotalSent] = useState(0);
-
-  // 初始化验证码
-  useEffect(() => {
-    setCaptchaQuestion(getRandomCaptcha());
-  }, []);
 
   // 从 localStorage 读取限制状态
   useEffect(() => {
-    const { remainingToday: remaining, totalSent: sent, quotaWarning: warning } = getLimitStatus();
+    const { remainingToday: remaining, quotaWarning: warning } = getLimitStatus();
     setRemainingToday(remaining);
-    setTotalSent(sent);
     setQuotaWarning(warning);
   }, []);
 
   const canSubmit = (errorCallback: (msg: string) => void) => {
-    if (quotaWarning || totalSent >= MONTHLY_QUOTA) {
+    // 蜜罐检测：如果这个隐藏字段有值，说明是机器人
+    if (honeypot) {
+      // 假装成功但不实际发送，让机器人以为自己成功了
+      return true;
+    }
+    if (quotaWarning) {
       errorCallback(t('quotaReached'));
       return false;
     }
@@ -94,16 +88,20 @@ export function ContactInfo() {
       errorCallback(t('cooldownMessage', { minutes }));
       return false;
     }
-    if (captcha !== captchaQuestion.answer) {
-      errorCallback(t('captchaError'));
-      return false;
-    }
     return true;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    // 蜜罐检测：如果这个隐藏字段有值，说明是机器人
+    // 假装发送成功，让机器人以为自己成功了
+    if (honeypot) {
+      setSent(true);
+      setTimeout(() => setSent(false), 3000);
+      return;
+    }
 
     if (!canSubmit((msg) => setError(msg))) return;
 
@@ -118,16 +116,11 @@ export function ContactInfo() {
 
       const updateResult = updateLimitData();
       setRemainingToday(updateResult.remainingToday);
-      setTotalSent(updateResult.totalSent);
       setCooldownEnd(updateResult.cooldownEnd);
       setQuotaWarning(updateResult.quotaWarning);
 
       setSent(true);
       setFormData({ name: "", email: "", message: "" });
-      setCaptcha("");
-
-      // 重置验证码
-      setCaptchaQuestion(getRandomCaptcha());
 
       setTimeout(() => setSent(false), 3000);
     } catch (error) {
@@ -140,14 +133,12 @@ export function ContactInfo() {
 
   const borderColor = isDark ? "border-white/10" : "border-black/10";
   const borderFocus = isDark ? "focus:border-blue-500/50" : "focus:border-blue-500/50";
-  const bgSubtle = isDark ? "bg-white/[0.02]" : "bg-black/[0.02]";
-  const bgHover = isDark ? "hover:bg-white/[0.03]" : "hover:bg-black/[0.03]";
+  const bgSubtle = isDark ? "bg-white/[0.02]" : "bg-white";
+  const bgHover = isDark ? "hover:bg-white/[0.03]" : "hover:bg-gray-50";
   const textSecondary = isDark ? "text-gray-400" : "text-gray-500";
   const iconBg = isDark ? "bg-white/5" : "bg-black/5";
   const inputBg = isDark ? "bg-zinc-900/50" : "bg-zinc-100/50";
   const btnBg = isDark ? "bg-white text-black" : "bg-black text-white";
-
-  const currentCaptchaText = locale === 'zh' ? captchaQuestion.question.zh : captchaQuestion.question.en;
 
   return (
     <div className="grid lg:grid-cols-12 gap-12 pb-64">
@@ -189,7 +180,7 @@ export function ContactInfo() {
         <div className={cn(
           "p-10 rounded-[2.5rem] border mt-8",
           borderColor,
-          isDark ? "bg-gradient-to-br from-blue-500/10 to-emerald-500/5" : "bg-gradient-to-br from-blue-500/5 to-emerald-500/5"
+          isDark ? "bg-gradient-to-br from-blue-500/10 to-emerald-500/5" : "bg-white"
         )}>
           <div className="flex items-center gap-4 mb-6">
             <div className={cn("p-3 rounded-xl", iconBg)}>
@@ -233,16 +224,6 @@ export function ContactInfo() {
           {t('sendMessage')}
         </h3>
 
-        {/* 剩余发送次数 */}
-        <div className="mb-6 flex items-center justify-between">
-          <span className={cn("text-xs font-mono", textSecondary)}>
-            {t('remainingToday')}: {remainingToday}/{RATE_LIMIT.maxPerDay}
-          </span>
-          <span className={cn("text-xs font-mono", textSecondary)}>
-            {t('monthlyUsed')}: {totalSent}/{MONTHLY_QUOTA}
-          </span>
-        </div>
-
         <div className={cn(
           "p-10 rounded-[2.5rem] border backdrop-blur-sm relative overflow-hidden",
           borderColor,
@@ -252,7 +233,7 @@ export function ContactInfo() {
             <div className="text-center py-16 animate-success-pop">
               <div className={cn(
                 "w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-8 border",
-                isDark ? "bg-emerald-500/10 border-emerald-500/20" : "bg-emerald-500/10 border-emerald-500/20"
+                isDark ? "bg-emerald-500/10 border-emerald-500/20" : "bg-emerald-50 border-emerald-200"
               )}>
                 <CheckCircle2 size={40} className="text-emerald-500" />
               </div>
@@ -276,6 +257,18 @@ export function ContactInfo() {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-8">
+              {/* 蜜罐字段 - 对用户不可见，用于防机器人 */}
+              <input
+                type="text"
+                name="website"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+                tabIndex={-1}
+                autoComplete="off"
+                className="absolute opacity-0 pointer-events-none"
+                style={{ position: 'absolute', left: '-9999px' }}
+              />
+
               {/* 错误提示 */}
               {error && (
                 <div className={cn(
@@ -343,73 +336,48 @@ export function ContactInfo() {
                     )}
                   />
                 </div>
-
-                {/* 验证码 */}
-                <div className="group space-y-3">
-                  <label className={cn(
-                    "flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all duration-300 transform",
-                    isDark ? "opacity-40 group-focus-within:opacity-100 group-focus-within:text-blue-500" : "opacity-40 group-focus-within:opacity-100 group-focus-within:text-blue-500",
-                    "group-focus-within:translate-x-1"
-                  )}>
-                    <AlertTriangle size={12} />
-                    {t('verifyHuman')}
-                  </label>
-                  <div className="flex items-center gap-3">
-                    <span className={cn("text-sm font-mono whitespace-nowrap", textSecondary)}>
-                      {currentCaptchaText}
-                    </span>
-                    <input
-                      type="text"
-                      value={captcha}
-                      onChange={(e) => setCaptcha(e.target.value)}
-                      placeholder="?"
-                      className={cn(
-                        "flex-1 px-5 h-14 rounded-2xl text-sm border transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-500/10",
-                        inputBg,
-                        borderColor,
-                        borderFocus,
-                        textSecondary
-                      )}
-                    />
-                  </div>
-                </div>
               </div>
 
-              {/* 发送按钮 */}
-              <button
-                type="submit"
-                disabled={sending || remainingToday <= 0 || totalSent >= MONTHLY_QUOTA}
-                className={cn(
-                  "relative w-full h-16 rounded-2xl font-black text-xs uppercase tracking-[0.3em] flex items-center justify-center gap-3 transition-all duration-300 active:scale-[0.98] cursor-pointer overflow-hidden group",
-                  sending ? "opacity-80" : "",
-                  (remainingToday <= 0 || totalSent >= MONTHLY_QUOTA) ? "opacity-50 cursor-not-allowed" : "",
-                  btnBg
-                )}
-              >
-                {/* Hover时的反光扫过动画 */}
-                <div className="absolute inset-0 w-1/2 h-full bg-white/20 -skew-x-[45deg] -translate-x-[150%] group-hover:translate-x-[250%] transition-transform duration-1000 ease-in-out pointer-events-none" />
+              {/* 发送按钮和剩余统计 */}
+              <div className="flex items-center justify-between gap-4">
+                <button
+                  type="submit"
+                  disabled={sending || remainingToday <= 0}
+                  className={cn(
+                    "flex-1 h-16 rounded-2xl font-black text-xs uppercase tracking-[0.3em] flex items-center justify-center gap-3 transition-all duration-300 active:scale-[0.98] cursor-pointer overflow-hidden group",
+                    sending ? "opacity-80" : "",
+                    remainingToday <= 0 ? "opacity-50 cursor-not-allowed" : "",
+                    btnBg
+                  )}
+                >
+                  {/* Hover时的反光扫过动画 */}
+                  <div className="absolute inset-0 w-1/2 h-full bg-white/20 -skew-x-[45deg] -translate-x-[150%] group-hover:translate-x-[250%] transition-transform duration-1000 ease-in-out pointer-events-none" />
 
-                {sending ? (
-                  <div className="flex items-center gap-3">
-                    <div className="relative w-5 h-5">
-                      <div className={cn("absolute inset-0 border-2 border-current/20 rounded-full", isDark ? "border-white/20" : "border-black/20")} />
-                      <div className="absolute inset-0 border-2 border-current border-t-transparent rounded-full animate-spin-smooth" />
+                  {sending ? (
+                    <div className="flex items-center gap-3">
+                      <div className="relative w-5 h-5">
+                        <div className={cn("absolute inset-0 border-2 border-current/20 rounded-full", isDark ? "border-white/20" : "border-black/20")} />
+                        <div className="absolute inset-0 border-2 border-current border-t-transparent rounded-full animate-spin-smooth" />
+                      </div>
+                      <span className="animate-pulse">{t('sending')}</span>
                     </div>
-                    <span className="animate-pulse">{t('sending')}</span>
-                  </div>
-                ) : remainingToday <= 0 ? (
-                  <span>{t('limitReached')}</span>
-                ) : totalSent >= MONTHLY_QUOTA ? (
-                  <span>{t('quotaReached')}</span>
-                ) : (
-                  <>
-                    <span className="group-hover:translate-x-[-4px] transition-transform duration-300">
-                      {t('sendButton')}
-                    </span>
-                    <ArrowUpRight size={18} className="group-hover:translate-x-1 group-hover:translate-y-[-4px] transition-transform duration-300" />
-                  </>
-                )}
-              </button>
+                  ) : remainingToday <= 0 ? (
+                    <span>{t('limitReached')}</span>
+                  ) : (
+                    <>
+                      <span className="group-hover:translate-x-[-4px] transition-transform duration-300">
+                        {t('sendButton')}
+                      </span>
+                      <ArrowUpRight size={18} className="group-hover:translate-x-1 group-hover:translate-y-[-4px] transition-transform duration-300" />
+                    </>
+                  )}
+                </button>
+
+                {/* 今日剩余统计 */}
+                <div className={cn("text-xs font-mono px-3 py-2 rounded-xl", textSecondary)}>
+                  {t('remainingToday')}: <span className="font-bold">{remainingToday}/{LOCAL_LIMIT}</span>
+                </div>
+              </div>
             </form>
           )}
         </div>
