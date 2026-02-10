@@ -14,7 +14,7 @@ export function ContactHeader() {
   const borderColor = isDark ? "border-white/10" : "border-black/10";
 
   return (
-    <header className="mb-32 md:mb-32 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+    <header className="mb-32 py-6 md:mb-32 animate-in fade-in slide-in-from-bottom-8 duration-1000">
       <div className={cn("inline-block px-3 py-1 border rounded-full text-[10px] uppercase tracking-widest mb-10", borderColor)}>
         {t('greeting')}
       </div>

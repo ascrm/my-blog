@@ -169,5 +169,36 @@
     "projectOverviewEn": "PROJECT OVERVIEW",
     "visitProject": "访问项目",
     "visitProjectEn": "VISIT PROJECT"
+  },
+  "archiveFeed": {
+    "readFullPost": "Read More",
+    "wantMore": "Want More?",
+    "subscribeDescription": "Subscribe to my newsletter for weekly tech trends and design inspiration.",
+    "join": "Join",
+    "emailPlaceholder": "Email",
+    "noPosts": "No posts yet",
+    "searchPlaceholder": "Search titles, content...",
+    "categoryFilter": "Category",
+    "yearFilter": "Year",
+    "allCategories": "All",
+    "allYears": "All",
+    "emptyTitle": "Nothing Here",
+    "emptySubtitle": "Try changing keywords or filters",
+    "views": "views",
+    "status": {
+      "evergreen": "Evergreen",
+      "sprouting": "Sprouting",
+      "evolving": "Evolving",
+      "fading": "Archive"
+    }
+  },
+  "archiveHeader": {
+    "digitalGarden": "数字花园",
+    "digitalGardenEn": "DIGITAL GARDEN",
+    "archiveList": "归档列表",
+    "archiveListEn": "ARCHIVE LIST",
+    "description": "这里记录了我的思考、技术探索和设计实验。",
+    "descriptionEn": "Recording my thoughts, technical explorations, and design experiments.",
+    "searchAndFilter": "Search & Filter"
   }
 }

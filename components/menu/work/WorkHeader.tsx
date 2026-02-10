@@ -35,7 +35,7 @@ export function WorkHeader({
     locale === 'zh' ? zh : en;
 
   return (
-    <div className="min-h-[300px] flex items-start mb-20 relative">
+    <div className="min-h-[300px] flex items-start mb-20 relative py-6">
       {!showSearch ? (
         /* 标准 Header Section */
         <header className="w-full flex justify-between items-end animate-in fade-in slide-in-from-bottom-8 duration-1000">

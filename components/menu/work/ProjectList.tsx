@@ -113,7 +113,7 @@ export function ProjectList({ projects = projectsData }: ProjectListProps) {
   if (!mounted) return null;
 
   return (
-    <div className="space-y-64 pb-64">
+    <div className="space-y-64 pb-80">
       {projects.map((p, i) => (
         <div
           key={p.id}

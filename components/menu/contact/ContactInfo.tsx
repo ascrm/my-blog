@@ -150,7 +150,7 @@ export function ContactInfo() {
   const currentCaptchaText = locale === 'zh' ? captchaQuestion.question.zh : captchaQuestion.question.en;
 
   return (
-    <div className="grid lg:grid-cols-12 gap-12">
+    <div className="grid lg:grid-cols-12 gap-12 pb-64">
       {/* 联系卡片 */}
       <div className="lg:col-span-7 space-y-6">
         <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] opacity-30 mb-8">
