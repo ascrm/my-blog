@@ -7,7 +7,6 @@ export default function SiteLayout({
   children
 }: {
   children: React.ReactNode;
-  params: Promise<{locale: string}>;
 }) {
   return (
     <Provider>
