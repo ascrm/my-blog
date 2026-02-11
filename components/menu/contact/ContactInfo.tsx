@@ -139,12 +139,20 @@ export function ContactInfo() {
   const iconBg = isDark ? "bg-white/5" : "bg-black/5";
   const inputBg = isDark ? "bg-zinc-900/50" : "bg-zinc-100/50";
   const btnBg = isDark ? "bg-white text-black" : "bg-black text-white";
+  const cardGradient = isDark ? "bg-gradient-to-br from-blue-500/10 to-emerald-500/5" : "bg-white";
+  const warningBg = isDark ? "bg-amber-500/10 border-amber-500/30" : "bg-amber-50 border-amber-200";
+  const warningText = isDark ? "text-amber-400" : "text-amber-700";
+  const successBg = isDark ? "bg-emerald-500/10 border-emerald-500/20" : "bg-emerald-50 border-emerald-200";
+  const secondaryBtn = isDark ? "border-white/10 hover:bg-white hover:text-black" : "border-black/10 hover:bg-black hover:text-white";
+  const errorBg = isDark ? "bg-red-500/10 border-red-500/30 text-red-400" : "bg-red-50 border-red-200 text-red-600";
+  const labelText = isDark ? "opacity-40 group-focus-within:opacity-100 group-focus-within:text-blue-500" : "opacity-40 group-focus-within:opacity-100 group-focus-within:text-blue-500";
+  const spinnerBorder = isDark ? "border-white/20" : "border-black/20";
 
   return (
     <div className="grid lg:grid-cols-12 gap-12 pb-64">
       {/* 联系卡片 */}
       <div className="lg:col-span-7 space-y-6">
-        <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] opacity-30 mb-8">
+        <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] opacity-30 mb-5">
           {t('contactMethods')}
         </h3>
         <div className="grid sm:grid-cols-2 gap-6">
@@ -155,7 +163,7 @@ export function ContactInfo() {
               target="_blank"
               rel="noopener noreferrer"
               className={cn(
-                "p-10 rounded-[2.5rem] border transition-all duration-500 group cursor-pointer",
+                "p-10 rounded-[2.5rem] shadow border transition-all duration-500 group cursor-pointer",
                 borderColor,
                 bgSubtle,
                 bgHover
@@ -178,9 +186,9 @@ export function ContactInfo() {
 
         {/* 邮件订阅卡片 */}
         <div className={cn(
-          "p-10 rounded-[2.5rem] border mt-8",
+          "p-10 shadow rounded-[2.5rem] border mt-8",
           borderColor,
-          isDark ? "bg-gradient-to-br from-blue-500/10 to-emerald-500/5" : "bg-white"
+          cardGradient,
         )}>
           <div className="flex items-center gap-4 mb-6">
             <div className={cn("p-3 rounded-xl", iconBg)}>
@@ -203,11 +211,11 @@ export function ContactInfo() {
         {quotaWarning && (
           <div className={cn(
             "p-6 rounded-2xl border flex items-center gap-4",
-            isDark ? "bg-amber-500/10 border-amber-500/30" : "bg-amber-50 border-amber-200"
+            warningBg
           )}>
             <AlertTriangle size={24} className="text-amber-500 flex-shrink-0" />
             <div>
-              <p className={cn("text-sm font-bold", isDark ? "text-amber-400" : "text-amber-700")}>
+              <p className={cn("text-sm font-bold", warningText)}>
                 {t('quotaLow')}
               </p>
               <p className={cn("text-xs opacity-70", textSecondary)}>
@@ -220,12 +228,12 @@ export function ContactInfo() {
 
       {/* 联系表单 */}
       <div className="lg:col-span-5">
-        <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] opacity-30 mb-8">
+        <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] opacity-30 mb-5">
           {t('sendMessage')}
         </h3>
 
         <div className={cn(
-          "p-10 rounded-[2.5rem] border backdrop-blur-sm relative overflow-hidden",
+          "p-10 rounded-[2.5rem] shadow border backdrop-blur-sm relative overflow-hidden",
           borderColor,
           bgSubtle
         )}>
@@ -233,7 +241,7 @@ export function ContactInfo() {
             <div className="text-center py-16 animate-success-pop">
               <div className={cn(
                 "w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-8 border",
-                isDark ? "bg-emerald-500/10 border-emerald-500/20" : "bg-emerald-50 border-emerald-200"
+                successBg
               )}>
                 <CheckCircle2 size={40} className="text-emerald-500" />
               </div>
@@ -247,9 +255,7 @@ export function ContactInfo() {
                 onClick={() => setSent(false)}
                 className={cn(
                   "px-8 py-3 rounded-xl border text-xs font-bold uppercase tracking-widest transition-all active:scale-95 cursor-pointer",
-                  isDark
-                    ? "border-white/10 hover:bg-white hover:text-black"
-                    : "border-black/10 hover:bg-black hover:text-white"
+                  secondaryBtn
                 )}
               >
                 {t('returnForm')}
@@ -273,7 +279,7 @@ export function ContactInfo() {
               {error && (
                 <div className={cn(
                   "p-4 rounded-xl text-sm border animate-shake",
-                  isDark ? "bg-red-500/10 border-red-500/30 text-red-400" : "bg-red-50 border-red-200 text-red-600"
+                  errorBg
                 )}>
                   {error}
                 </div>
@@ -288,7 +294,7 @@ export function ContactInfo() {
                   <div key={field.id} className="group space-y-3">
                     <label className={cn(
                       "flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all duration-300 transform",
-                      isDark ? "opacity-40 group-focus-within:opacity-100 group-focus-within:text-blue-500" : "opacity-40 group-focus-within:opacity-100 group-focus-within:text-blue-500",
+                      labelText,
                       "group-focus-within:translate-x-1"
                     )}>
                       <field.icon size={12} />
@@ -315,7 +321,7 @@ export function ContactInfo() {
                 <div className="group space-y-3">
                   <label className={cn(
                     "flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all duration-300 transform",
-                    isDark ? "opacity-40 group-focus-within:opacity-100 group-focus-within:text-blue-500" : "opacity-40 group-focus-within:opacity-100 group-focus-within:text-blue-500",
+                    labelText,
                     "group-focus-within:translate-x-1"
                   )}>
                     <MessageSquare size={12} />
@@ -356,7 +362,7 @@ export function ContactInfo() {
                   {sending ? (
                     <div className="flex items-center gap-3">
                       <div className="relative w-5 h-5">
-                        <div className={cn("absolute inset-0 border-2 border-current/20 rounded-full", isDark ? "border-white/20" : "border-black/20")} />
+                        <div className={cn("absolute inset-0 border-2 border-current/20 rounded-full", spinnerBorder)} />
                         <div className="absolute inset-0 border-2 border-current border-t-transparent rounded-full animate-spin-smooth" />
                       </div>
                       <span className="animate-pulse">{t('sending')}</span>

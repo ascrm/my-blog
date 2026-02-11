@@ -9,6 +9,7 @@ export function ContactHeader() {
   const { isDark } = useSite();
   const t = useTranslations('contact');
 
+  const textPrimary = isDark ? "text-[#f0f0f0]" : "text-[#1a1a1a]";
   const textSecondary = isDark ? "text-gray-400" : "text-gray-500";
   const borderColor = isDark ? "border-white/10" : "border-black/10";
 
@@ -17,7 +18,7 @@ export function ContactHeader() {
       <div className={cn("inline-block px-3 py-1 border rounded-full text-[10px] uppercase tracking-widest mb-10", borderColor)}>
         {t('greeting')}
       </div>
-      <h2 className={cn("text-5xl md:text-8xl font-bold tracking-tighter mb-8 italic", textSecondary)}>
+      <h2 className={cn("text-5xl md:text-8xl font-bold tracking-tighter mb-8 italic", textPrimary)}>
         {t('title')}
       </h2>
       <p className={cn("text-xl md:text-2xl max-w-3xl leading-relaxed", textSecondary)}>

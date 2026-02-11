@@ -15,6 +15,8 @@ export function Hero() {
   const bgSubtle = isDark ? "bg-white/[0.02]" : "bg-black/[0.02]";
   const btnBg = isDark ? "bg-white text-black" : "bg-black text-white";
   const iconOpacity = isDark ? "opacity-40" : "opacity-60";
+  const textMuted = isDark ? "text-gray-400" : "text-gray-600";
+  const textStroke = isDark ? '1px rgba(255,255,255,0.1)' : '1px rgba(0,0,0,0.1)';
 
   return (
     <section className="relative flex items-center pt-12 pb-80">
@@ -29,7 +31,7 @@ export function Hero() {
               <span className={cn(
                 "text-5xl md:text-8xl font-black tracking-tighter italic py-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-emerald-500"
               )}
-              style={{ WebkitTextStroke: isDark ? '1px rgba(255,255,255,0.1)' : '1px rgba(0,0,0,0.1)' }}>
+              style={{ WebkitTextStroke: textStroke }}>
                 {t('name')}
               </span>
             </h1>
@@ -83,7 +85,7 @@ export function Hero() {
               </div>
             </div>
 
-            <div className={cn("space-y-4 text-left", isDark ? "text-gray-400" : "text-gray-600")}>
+            <div className={cn("space-y-4 text-left", textMuted)}>
               <div className="flex items-center gap-3 text-sm font-mono">
                 <MapPin size={14} className="text-blue-500" />
                 <span>{t('location')}</span>

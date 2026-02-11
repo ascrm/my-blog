@@ -28,6 +28,9 @@ function ModernImageStack({ images, isDark, reversed = false }: { images: string
     }
   ];
 
+  const bgGlow = isDark ? "bg-blue-600/8" : "bg-blue-400/5";
+  const borderCard = isDark ? "border-white/10 shadow-2xl shadow-black" : "border-black/5 shadow-xl shadow-black/[0.05]";
+
   return (
     <div
       className="relative w-full aspect-square md:aspect-[4/3.2] max-w-xl mx-auto flex items-center justify-center"
@@ -37,7 +40,7 @@ function ModernImageStack({ images, isDark, reversed = false }: { images: string
       {/* 装饰性背景发光 */}
       <div className={cn(
         "absolute inset-0 rounded-[4rem] transition-all duration-1000 blur-[100px]",
-        isDark ? "bg-blue-600/8" : "bg-blue-400/5",
+        bgGlow,
         isHovered ? "opacity-100 scale-110" : "opacity-0 scale-90"
       )} />
 
@@ -50,7 +53,7 @@ function ModernImageStack({ images, isDark, reversed = false }: { images: string
             key={i}
             className={cn(
               "absolute w-[85%] aspect-video rounded-3xl border transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] overflow-hidden",
-              isDark ? "border-white/10 shadow-2xl shadow-black" : "border-black/5 shadow-xl shadow-black/[0.05]",
+              borderCard,
               i === 2 ? "z-30" : i === 1 ? "z-20" : "z-10"
             )}
             style={{
@@ -104,6 +107,15 @@ export function OffsetSections() {
   const locale = params.locale as string || 'zh';
   const t = useTranslations('offsetSections');
 
+  const btnWork = isDark
+    ? "bg-white/5 text-white hover:bg-white/10 shadow-2xl shadow-black/50 border border-white/5"
+    : "bg-white text-black hover:shadow-2xl shadow-black/5 border border-black/[0.05]";
+  const btnWorkIcon = isDark ? "group-hover:text-blue-400" : "group-hover:text-blue-600";
+  const btnArchive = isDark
+    ? "bg-white/5 text-white hover:bg-white/10 shadow-2xl shadow-black/50 border border-white/5"
+    : "bg-white text-black hover:shadow-2xl shadow-black/5 border border-black/[0.05]";
+  const btnArchiveIcon = isDark ? "group-hover:text-emerald-400" : "group-hover:text-emerald-600";
+
   return (
     <section className="pb-20 md:pb-60 space-y-40 md:space-y-80 overflow-hidden">
       {/* 精选作品集 */}
@@ -125,15 +137,13 @@ export function OffsetSections() {
             href={`/${locale}/work`}
             className={cn(
               "group relative shadow inline-flex items-center gap-6 px-6 py-4 rounded-xl transition-all duration-300 text-sm font-black tracking-[0.2em] uppercase cursor-pointer",
-              isDark
-                ? "bg-white/5 text-white hover:bg-white/10 shadow-2xl shadow-black/50 border border-white/5"
-                : "bg-white text-black hover:shadow-2xl shadow-black/5 border border-black/[0.05]"
+              btnWork
             )}
           >
             <span>{locale === 'zh' ? '查看全部作品' : 'VIEW ALL WORKS'}</span>
             <ArrowUpRight size={18} className={cn(
               "transition-all duration-300 group-hover:-translate-y-1",
-              isDark ? "group-hover:text-blue-400" : "group-hover:text-blue-600"
+              btnWorkIcon
             )} />
           </Link>
         </div>
@@ -167,15 +177,13 @@ export function OffsetSections() {
               href={`/${locale}/archive`}
               className={cn(
                 "group relative inline-flex shadow items-center gap-4 px-6 py-4 rounded-xl transition-all duration-300 text-sm font-black tracking-[0.2em] uppercase cursor-pointer",
-                isDark
-                  ? "bg-white/5 text-white hover:bg-white/10 shadow-2xl shadow-black/50 border border-white/5"
-                  : "bg-white text-black hover:shadow-2xl shadow-black/5 border border-black/[0.05]"
+                btnArchive
               )}
             >
               <span>{locale === 'zh' ? '进入深度归档' : 'DEEP ARCHIVE'}</span>
               <Plus size={18} className={cn(
                 "transition-all duration-300 group-hover:rotate-180",
-                isDark ? "group-hover:text-emerald-400" : "group-hover:text-emerald-600"
+                btnArchiveIcon
               )} />
             </Link>
           </div>

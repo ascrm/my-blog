@@ -14,6 +14,14 @@ export function TechStack() {
   const [sliderStyle, setSliderStyle] = useState<React.CSSProperties>({});
   const tabsRef = useRef<Record<string, HTMLButtonElement | null>>({});
 
+  const tabContainerBg = isDark ? "bg-white/5 border-white/10" : "bg-white border-black/[0.05]";
+  const sliderBg = isDark ? "bg-white" : "bg-black";
+  const activeText = isDark ? "text-black" : "text-white";
+  const inactiveText = isDark ? "text-white/40" : "text-black/40";
+  const skillCard = isDark
+    ? "bg-white/[0.04] border-white/5 hover:bg-white/[0.08] hover:border-white/15 hover:shadow-2xl hover:shadow-black hover:-translate-y-1"
+    : "bg-white border-black/[0.03] shadow-sm hover:border-black/[0.1] hover:shadow-xl hover:shadow-black/[0.04] hover:-translate-y-1";
+
   const categories = [
     { id: 'frontend', label: t('frontend'), icon: Code2 },
     { id: 'backend', label: t('backend'), icon: Cpu },
@@ -83,12 +91,12 @@ export function TechStack() {
 
           <div className={cn(
             "relative flex p-1.5 rounded-2xl border backdrop-blur-md overflow-hidden",
-            isDark ? "bg-white/5 border-white/10" : "bg-white border-black/[0.05]"
+            tabContainerBg
           )}>
             <div
               className={cn(
                 "absolute top-1.5 bottom-1.5 left-0 rounded-xl transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] shadow-xl",
-                isDark ? "bg-white" : "bg-black"
+                sliderBg
               )}
               style={sliderStyle}
             />
@@ -104,8 +112,8 @@ export function TechStack() {
                   className={cn(
                     "relative z-10 flex items-center gap-2 px-6 py-2.5 rounded-xl transition-all duration-300 text-xs font-black uppercase tracking-widest active:scale-95 cursor-pointer",
                     isActive
-                      ? (isDark ? "text-black" : "text-white")
-                      : "text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white"
+                      ? activeText
+                      : `${inactiveText} hover:text-black dark:hover:text-white`
                   )}
                 >
                   <Icon size={14} className={cn("transition-transform duration-300", isActive && "scale-110")} />
@@ -122,9 +130,7 @@ export function TechStack() {
               key={skill.slug}
               className={cn(
                 "group flex items-center gap-4 p-4 rounded-2xl border transition-all duration-300",
-                isDark
-                  ? "bg-white/[0.04] border-white/5 hover:bg-white/[0.08] hover:border-white/15 hover:shadow-2xl hover:shadow-black hover:-translate-y-1"
-                  : "bg-white border-black/[0.03] shadow-sm hover:border-black/[0.1] hover:shadow-xl hover:shadow-black/[0.04] hover:-translate-y-1"
+                skillCard
               )}
             >
               <div className="relative w-8 h-8 flex-shrink-0">

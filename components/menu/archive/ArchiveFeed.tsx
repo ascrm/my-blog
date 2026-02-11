@@ -138,6 +138,8 @@ export function ArchiveFeed({ archives = MOCK_ARCHIVES, loading = false }: Archi
     : "bg-white border-white/50 hover:border-black/10";
   const textSecondary = isDark ? "text-gray-500" : "text-gray-400";
   const dividerColor = isDark ? "border-white/5" : "border-black/5";
+  const badgeBg = isDark ? "bg-white/10" : "bg-black/5";
+  const titleHover = isDark ? "group-hover:text-emerald-400" : "group-hover:text-emerald-500";
 
   // 获取文章（使用模拟数据）
   // useEffect(() => {
@@ -208,7 +210,7 @@ export function ArchiveFeed({ archives = MOCK_ARCHIVES, loading = false }: Archi
               </span>
               <div className={cn(
                 "px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider opacity-60",
-                isDark ? "bg-white/10" : "bg-black/5"
+                badgeBg
               )}>
                 {article.category}
               </div>
@@ -217,7 +219,7 @@ export function ArchiveFeed({ archives = MOCK_ARCHIVES, loading = false }: Archi
             {/* 标题 - 带 hover 效果 */}
             <h3 className={cn(
               "text-2xl font-bold mb-5 leading-tight transition-all duration-500",
-              isDark ? "group-hover:text-emerald-400" : "group-hover:text-emerald-500"
+              titleHover
             )}>
               {article.title}
             </h3>

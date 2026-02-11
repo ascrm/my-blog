@@ -23,6 +23,7 @@ export function NewsletterForm({ className }: NewsletterFormProps) {
 
   const textSecondary = isDark ? "text-gray-400" : "text-gray-500";
   const borderColor = isDark ? "border-white/10" : "border-black/10";
+  const successBg = isDark ? "bg-emerald-500/10 border-emerald-500/30" : "bg-emerald-50 border-emerald-200";
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -78,7 +79,7 @@ export function NewsletterForm({ className }: NewsletterFormProps) {
 
       {/* 成功提示 */}
       {status === "success" && (
-        <div className="mt-4 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30">
+        <div className={cn("mt-4 p-4 rounded-xl border", successBg)}>
           <p className="text-sm text-emerald-500 font-medium">
             {locale === "zh"
               ? "✓ 已打开订阅页面，请在浏览器新标签页中完成订阅"

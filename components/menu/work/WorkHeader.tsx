@@ -25,8 +25,11 @@ export function WorkHeader({
   const [showSearch, setShowSearch] = useState(false);
 
   // 样式变量 - 使用 Spotlight.tsx 中的配色逻辑
+  const textPrimary = isDark ? "text-[#f0f0f0]" : "text-[#1a1a1a]";
   const textSecondary = isDark ? "text-gray-400" : "text-gray-500";
   const borderColor = isDark ? "border-white/10" : "border-black/10";
+  const hoverBgPrimary = isDark ? "hover:bg-white hover:text-black" : "hover:bg-black hover:text-white";
+  const hoverBgSecondary = isDark ? "hover:bg-white/10" : "hover:bg-black/10";
 
   // 辅助函数获取本地化文本
   const getLocalizedText = (zh: string, en: string) =>
@@ -40,7 +43,7 @@ export function WorkHeader({
           <div className="max-w-3xl">
             <div
               className={cn(
-                "inline-block px-3 py-1 border rounded-full text-[10px] uppercase tracking-widest mb-10",
+                "inline-block px-3 py-1 border rounded-full text-[10px] uppercase tracking-widest mb-3",
                 borderColor
               )}
             >
@@ -49,7 +52,7 @@ export function WorkHeader({
             <h2
               className={cn(
                 "text-5xl md:text-8xl font-bold tracking-tighter mb-8 italic",
-                textSecondary
+                textPrimary
               )}
             >
               {getLocalizedText(
@@ -59,7 +62,7 @@ export function WorkHeader({
             </h2>
             <p
               className={cn(
-                "text-xl md:text-2xl leading-relaxed max-w-2xl opacity-60"
+                "text-xl md:text-2xl leading-relaxed max-w-2xl opacity-60",textSecondary
               )}
             >
               {getLocalizedText(t('focusOnBuilding'), t('focusOnBuildingEn'))}
@@ -70,9 +73,7 @@ export function WorkHeader({
             className={cn(
               "group flex items-center gap-3 p-3.5 rounded-full border transition-all hover:scale-110 cursor-pointer",
               borderColor,
-              isDark
-                ? "hover:bg-white hover:text-black"
-                : "hover:bg-black hover:text-white"
+              hoverBgPrimary
             )}
             title={getLocalizedText(t('filterCategories'), t('filterByCategories'))}
           >
@@ -88,7 +89,7 @@ export function WorkHeader({
                 onClick={() => setShowSearch(false)}
                 className={cn(
                   "p-3 rounded-full transition-colors cursor-pointer",
-                  isDark ? "hover:bg-white/10" : "hover:bg-black/10"
+                  hoverBgSecondary
                 )}
               >
                 <ArrowLeft size={20} />

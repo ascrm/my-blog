@@ -31,8 +31,14 @@ export function ProjectList({ projects: propsProjects }: ProjectListProps) {
   // 样式变量 - 使用 Spotlight.tsx 中的配色逻辑
   const textPrimary = isDark ? "text-[#f0f0f0]" : "text-[#1a1a1a]";
   const textSecondary = isDark ? "text-gray-400" : "text-gray-500";
+  const textMuted = isDark ? "text-gray-500" : "text-gray-400";
   const borderColor = isDark ? "border-white/10" : "border-black/10";
   const bgCard = isDark ? "bg-white/5 border-white/5" : "bg-black/5 border-black/5";
+  const dividerColor = isDark ? "bg-white/20" : "bg-black/20";
+  const buttonPrimary = isDark
+    ? "bg-white text-black border-white shadow-white/5"
+    : "bg-black text-white border-black shadow-black/5";
+  // const sliderBg = isDark ? "bg-black/40" : "bg-black/40"; // 轮播图背景保持深色以突出图片
 
   // 辅助函数获取本地化文本
   const getLocalizedText = (zh: string, en: string) =>
@@ -172,7 +178,7 @@ export function ProjectList({ projects: propsProjects }: ProjectListProps) {
                 <div
                   className={cn(
                     "h-[1px] w-8",
-                    isDark ? "bg-white/20" : "bg-black/20"
+                    dividerColor
                   )}
                 ></div>
               </div>
@@ -207,10 +213,8 @@ export function ProjectList({ projects: propsProjects }: ProjectListProps) {
               <div className="flex items-center justify-between mt-12 w-full">
                 <button
                   className={cn(
-                    "flex items-center gap-3 px-10 py-5 rounded-xl text-sm font-bold tracking-widest transition-all transform active:scale-95 uppercase border cursor-pointer",
-                    isDark
-                      ? "bg-white text-black border-white hover:opacity-80 shadow-lg shadow-white/5"
-                      : "bg-black text-white border-black hover:opacity-80 shadow-lg shadow-black/5"
+                    "flex items-center gap-3 px-10 py-5 hover:opacity-80 shadow-lg rounded-xl text-sm font-bold tracking-widest transition-all transform active:scale-95 uppercase border cursor-pointer",
+                    buttonPrimary
                   )}
                 >
                   {getLocalizedText(t('visitProject'), t('visitProjectEn'))}{" "}
@@ -239,7 +243,7 @@ export function ProjectList({ projects: propsProjects }: ProjectListProps) {
                 <h4
                   className={cn(
                     "text-[10px] font-black uppercase tracking-[0.4em] mb-4",
-                    isDark ? "text-gray-500" : "text-gray-400"
+                    textMuted
                   )}
                 >
                   {getLocalizedText(t('projectOverview'), t('projectOverviewEn'))}

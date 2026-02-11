@@ -37,11 +37,12 @@ export function ArchiveHeader({
   const tFeed = useTranslations('archiveFeed');
 
   // 样式变量 - 使用 Spotlight.tsx 中的配色逻辑
+  const textPrimary = isDark ? "text-[#f0f0f0]" : "text-[#1a1a1a]";
   const textSecondary = isDark ? "text-gray-400" : "text-gray-500";
   const borderColor = isDark ? "border-white/10" : "border-black/10";
   const inputBg = isDark ? "bg-white/5" : "bg-black/5";
   const activeTagBg = isDark ? "bg-white text-black" : "bg-black text-white";
-  const inactiveTagBg = isDark ? "bg-white/5 hover:bg-white/10" : "bg-black/5 hover:bg-black/10";
+  const inactiveTagBg = isDark ? "bg-white/5 hover:bg-white/10" : "bg-white hover:bg-black/10";
 
   // 辅助函数获取本地化文本
   const getLocalizedText = (zh: string, en: string) =>
@@ -53,10 +54,10 @@ export function ArchiveHeader({
       {!isSearching ? (
         <header className="w-full flex justify-between items-end animate-in fade-in slide-in-from-bottom-8 duration-1000">
           <div className="max-w-3xl">
-            <div className={cn("inline-block px-3 py-1 border rounded-full text-[10px] uppercase tracking-widest mb-10", borderColor)}>
+            <div className={cn("inline-block px-3 py-1 border rounded-full text-[10px] uppercase tracking-widest mb-3", borderColor)}>
               {getLocalizedText(t('digitalGarden'), t('digitalGardenEn'))}
             </div>
-            <h2 className={cn("text-5xl md:text-8xl font-bold tracking-tighter mb-8 italic", textSecondary)}>
+            <h2 className={cn("text-5xl md:text-8xl font-bold tracking-tighter mb-8 italic", textPrimary)}>
               {getLocalizedText(t('archiveList'), t('archiveListEn'))}
             </h2>
             <p className={cn("text-xl md:text-2xl leading-relaxed max-w-2xl opacity-60", textSecondary)}>
@@ -107,7 +108,7 @@ export function ArchiveHeader({
 
           {/* 分类筛选 */}
           <div className="flex flex-wrap items-center gap-4 mb-8">
-            <span className="text-[10px] uppercase tracking-widest opacity-30 mr-2">
+            <span className="text-[12px] uppercase tracking-widest opacity-30 mr-2">
               {getLocalizedText(tFeed('categoryFilter'), "Category")}:
             </span>
             {["All", ...categories].map((cat) => (
@@ -115,7 +116,7 @@ export function ArchiveHeader({
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
                 className={cn(
-                  "px-5 py-2.5 rounded-full text-[13px] font-medium transition-all duration-300 cursor-pointer",
+                  "px-5 py-2.5 rounded-full shadow text-[13px] font-medium transition-all duration-300 cursor-pointer",
                   selectedCategory === cat ? activeTagBg : inactiveTagBg
                 )}
               >
@@ -126,7 +127,7 @@ export function ArchiveHeader({
 
           {/* 年份筛选 */}
           <div className="flex flex-wrap items-center gap-4">
-            <span className="text-[10px] uppercase tracking-widest opacity-30 mr-2">
+            <span className="text-[12px] uppercase tracking-widest opacity-30 mr-2">
               {getLocalizedText(tFeed('yearFilter'), "Year")}:
             </span>
             {["All", ...years].map((year) => (
@@ -134,7 +135,7 @@ export function ArchiveHeader({
                 key={year}
                 onClick={() => setSelectedYear(year)}
                 className={cn(
-                  "px-5 py-2.5 rounded-full text-[13px] font-medium transition-all duration-300 cursor-pointer",
+                  "px-5 py-2.5 rounded-full shadow text-[13px] font-medium transition-all duration-300 cursor-pointer",
                   selectedYear === year ? activeTagBg : inactiveTagBg
                 )}
               >
