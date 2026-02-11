@@ -2,12 +2,12 @@
 
 import React from "react";
 
-interface BackgroundProps {
+interface SpotlightProps {
   mousePos: { x: number; y: number };
   isDark: boolean;
 }
 
-export function Background({ mousePos, isDark }: BackgroundProps) {
+export function Spotlight({ mousePos, isDark }: SpotlightProps) {
   // 使用蓝色聚光灯效果 (RGB: 59, 130, 246 - blue)
   const spotlightColor = isDark ? "rgba(59, 130, 246, 0.12)" : "rgba(59, 130, 246, 0.04)";
 

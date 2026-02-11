@@ -17,16 +17,13 @@ export function SiteFooter() {
 
   const borderColor = isDark ? "border-white/5" : "border-black/5";
   const bgSubtle = isDark ? "bg-white/[0.03]" : "bg-black/[0.03]";
-  // const textPrimary = isDark ? "text-white" : "text-black";
-  // const textSecondary = isDark ? "text-gray-400" : "text-gray-600";
-  // const textMuted = isDark ? "text-gray-500" : "text-gray-400";
   const bgColor = isDark ? "bg-[#080808]" : "bg-[#eee]";
 
   const navItems = [
     { key: "home", href: `/${locale}/home` },
     { key: "work", href: `/${locale}/work` },
     { key: "archive", href: `/${locale}/archive` },
-    { key: "resume", href: "#" },
+    { key: "contact", href: `/${locale}/contact` },
   ];
 
   return (

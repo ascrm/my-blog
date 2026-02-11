@@ -24,7 +24,7 @@ export function WorkHeader({
 
   const [showSearch, setShowSearch] = useState(false);
 
-  // 样式变量 - 使用 Background.tsx 中的配色逻辑
+  // 样式变量 - 使用 Spotlight.tsx 中的配色逻辑
   const textSecondary = isDark ? "text-gray-400" : "text-gray-500";
   const borderColor = isDark ? "border-white/10" : "border-black/10";
 
